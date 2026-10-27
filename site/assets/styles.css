@@ -1287,3 +1287,69 @@
     height:53px;
   }
 }
+
+/* v32 — Remove the entire redundant title bar on subpages.
+   Retain the centered logo in the left column and the mobile menu control. */
+@media (min-width:701px){
+  .app-shell:not(.home-top-feature) > .masthead{
+    display:none;
+  }
+  .app-shell:not(.home-top-feature) .side-nav nav{
+    margin-top:116px;
+  }
+}
+@media (min-width:701px) and (max-width:950px){
+  .app-shell:not(.home-top-feature) .side-nav nav{
+    margin-top:100px;
+  }
+}
+@media (max-width:700px){
+  .app-shell:not(.home-top-feature) > .masthead {
+    display:block;
+    position:relative;
+    flex:0 0 0px;
+    height:0;
+    min-height:0;
+    padding:0;
+    margin:0;
+    border:0;
+    background:transparent;
+    box-shadow:none;
+    overflow:visible;
+    isolation:auto;
+    pointer-events:none;
+    z-index:24;
+  }
+  .app-shell:not(.home-top-feature) > .masthead::before,
+  .app-shell:not(.home-top-feature) > .masthead::after,
+  .app-shell:not(.home-top-feature) > .masthead .brand,
+  .app-shell:not(.home-top-feature) > .masthead .header-photo,
+  .app-shell:not(.home-top-feature) > .masthead .mast-quote {
+    display:none!important;
+  }
+  .app-shell:not(.home-top-feature) > .masthead .menu-toggle{
+    display:block;
+    position:fixed;
+    top:11px;
+    right:10px;
+    left:auto;
+    z-index:31;
+    pointer-events:auto;
+  }
+  .app-shell:not(.home-top-feature) .side-nav{
+    top:0;
+    padding-top:85px;
+  }
+  .app-shell:not(.home-top-feature) #app{
+    padding-top:61px;
+    box-sizing:border-box;
+  }
+}
+@media (max-width:360px){
+  .app-shell:not(.home-top-feature) #app{
+    padding-top:58px;
+  }
+  .app-shell:not(.home-top-feature) .side-nav{
+    padding-top:78px;
+  }
+}
