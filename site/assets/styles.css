@@ -731,19 +731,20 @@
   }
 }
 
-/* v18 — Compact publication wordmark anchored to the upper-right corner. */
+/* v19 — Complete wordmark with transparent safety margin and inset positioning. */
 .app-shell.home-top-feature .masthead .brand-text strong{
   max-width:100%;
   height:auto;
-  aspect-ratio:1509/309;
+  aspect-ratio:2172/724;
+  background-image:url('images/prism-wordmark-gold-complete.webp');
   background-size:contain;
   background-position:center right;
   overflow:visible;
 }
 @media(min-width:701px){
   .app-shell.home-top-feature .masthead{
-    top:12px;
-    right:18px;
+    top:18px;
+    right:32px;
     left:auto;
     width:auto;
     max-width:calc(100vw - var(--prism-sidebar-width, 205px) - 36px);
@@ -755,7 +756,7 @@
   .app-shell.home-top-feature .masthead .brand-text>span{
     font-size:clamp(5.5px,.5vw,7px);
     letter-spacing:.14em;
-    margin-top:4px;
+    margin-top:-7px;
   }
   .app-shell.home-top-feature .masthead .brand-text em{
     font-size:clamp(5.5px,.48vw,6.5px);
@@ -764,11 +765,11 @@
 }
 @media(max-width:700px){
   .app-shell.home-top-feature .masthead{
-    top:8px;
+    top:12px;
   }
   .app-shell.home-top-feature .masthead .brand{
     max-width:calc(100% - 110px);
-    margin-right:10px;
+    margin-right:18px;
   }
   .app-shell.home-top-feature .masthead .brand-text{
     min-width:0;
@@ -780,7 +781,7 @@
   .app-shell.home-top-feature .masthead .brand-text>span{
     font-size:5px;
     letter-spacing:.04em;
-    margin-top:3px;
+    margin-top:-3px;
   }
   .app-shell.home-top-feature .masthead .brand-text em{
     font-size:5px;
