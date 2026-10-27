@@ -730,3 +730,50 @@
     width:clamp(140px,43vw,162px);
   }
 }
+
+/* v17 — Smaller faceted wordmark, inset from the upper-right corner.
+   The original full PRISM artwork is rendered with contain, leaving
+   a reliable right-hand safe area so its final M is never cropped. */
+@media(min-width:701px){
+  .app-shell.home-top-feature .masthead{
+    top:clamp(12px,1.8vw,22px);
+    right:clamp(36px,4.5vw,80px);
+    left:auto;
+    width:auto;
+    max-width:calc(100vw - var(--prism-sidebar-width, 205px) - 60px);
+    overflow:visible;
+  }
+  .app-shell.home-top-feature .masthead .brand-text strong{
+    width:clamp(200px,24vw,335px);
+    max-width:100%;
+    height:auto;
+    aspect-ratio:1509/309;
+    background-size:contain;
+    background-position:center right;
+    overflow:visible;
+  }
+}
+@media(max-width:700px){
+  .app-shell.home-top-feature .masthead .brand{
+    max-width:calc(100% - 110px);
+    margin-right:clamp(16px,5vw,26px);
+  }
+  .app-shell.home-top-feature .masthead .brand-text{
+    min-width:0;
+    max-width:100%;
+  }
+  .app-shell.home-top-feature .masthead .brand-text strong{
+    width:clamp(110px,36vw,170px);
+    max-width:100%;
+    aspect-ratio:1509/309;
+    height:auto;
+    background-size:contain;
+    background-position:center right;
+    overflow:visible;
+  }
+}
+@media(max-width:360px){
+  .app-shell.home-top-feature .masthead .brand-text strong{
+    width:clamp(103px,35vw,124px);
+  }
+}
