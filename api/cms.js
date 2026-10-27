@@ -25,7 +25,18 @@ function validItem(i){
   };
 }
 async function currentFile(token) {
-  const d=await github(token,'/repos/'+REPO+'/contents/'+CONTENT+'?ref='+BRANCH);
+  let d;
+  if(token){
+    d=await github(token,'/repos/'+REPO+'/contents/'+CONTENT+'?ref='+BRANCH);
+  }else{
+    // Read access remains possible before GitHub publishing credentials are configured.
+    // The publication repository and published JSON are public.
+    const response=await fetch('https://api.github.com/repos/'+REPO+'/contents/'+CONTENT+'?ref='+BRANCH,{
+      cache:'no-store',headers:{Accept:'application/vnd.github+json','User-Agent':'ThePrismCMS/1.0'}
+    });
+    if(!response.ok){const e=new Error('Unable to load published articles');e.status=response.status;throw e;}
+    d=await response.json();
+  }
   return {sha:d.sha,parsed:JSON.parse(Buffer.from(d.content.replace(/\s/g,''),'base64').toString('utf8'))};
 }
 export default async function handler(req,res){
@@ -34,8 +45,9 @@ export default async function handler(req,res){
   const action=typeof req.query?.action==='string'?req.query.action:'content';
   if(req.method==='GET'&&action==='content'){
     try{
-      const remote=await currentFile(publishingToken(user));
-      return send(res,200,{data:remote.parsed,sha:remote.sha});
+      const token=user.provider==='supabase'&&!process.env.CMS_GITHUB_TOKEN?null:publishingToken(user);
+      const remote=await currentFile(token);
+      return send(res,200,{data:remote.parsed,sha:remote.sha,canPublish:user.role==='admin'&&Boolean(token)});
     }catch(e){return handleError(res,e);}
   }
   if(req.method!=='POST'||!sameOrigin(req)||!isJson(req))return send(res,403,{error:'Unauthorized request'});

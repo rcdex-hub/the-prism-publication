@@ -13,7 +13,8 @@ async function query(path,{admin=true,body,method='GET'}={}){
  const response=await fetch(origin()+path,{
   method,cache:'no-store',
   headers:{
-   apikey:key,Authorization:'Bearer '+key,Accept:'application/json',
+   apikey:key,Accept:'application/json',
+   ...(key.startsWith('eyJ')?{Authorization:'Bearer '+key}:{}),
    ...(body?{'Content-Type':'application/json'}:{})
   },
   body:body?JSON.stringify(body):undefined
