@@ -1,5 +1,5 @@
 /* Offline cache for The Prism. Registration works over HTTPS or localhost. */
-const CACHE='the-prism-v6-20261027-main-featured';
+const CACHE='the-prism-v7-20261027-featured-top';
 const CORE=['./','./index.html','./admin.html','./assets/styles.css','./assets/admin.css','./assets/app.js','./assets/admin.js','./content/articles.json','./assets/images/prism-logo.webp','./assets/images/prism-masthead.webp','./assets/images/icon-192.png','./assets/images/icon-512.png','./assets/images/campus-feature-clean.webp','./assets/images/cartoon-choices.webp','./assets/images/infographic-newsroom.webp','./assets/images/gallery-treeplanting.webp','./assets/images/editorial-pen.webp','./assets/images/sports-basketball.webp','./manifest.webmanifest'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));});

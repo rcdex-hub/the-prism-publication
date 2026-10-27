@@ -22,8 +22,11 @@
     const heroList=[find('news'),find('feature'),find('sports')].filter(Boolean);
     const cartoon=find('cartoon'), info=find('infographic'),pic=find('gallery'),opinion=find('editorial'),sports=find('sports');
     const featureSlide=i=>`<div class="hero-slide"><img src="${validImage(i.image)}" alt="${esc(i.imageAlt||i.title)}" fetchpriority="high"><div class="hero-overlay"></div><div class="hero-copy"><span class="ribbon">${esc(category[i.type]||i.type.toUpperCase())}</span><h1>${esc(i.title)}</h1><p>${esc(i.excerpt)}</p><a class="read-btn" href="${pathTo(i)}">Read More <span>→</span></a></div></div>`;
+    const featured=document.getElementById('featured-header');
+    featured.innerHTML=`${heroList.map((i,n)=>`<div class="hero-pane ${n?'':'shown'}" data-slide="${n}">${featureSlide(i)}</div>`).join('')}<div class="hero-controls" aria-label="Featured story carousel"><div class="dots">${heroList.map((_,n)=>`<button class="dot ${n?'':'active'}" data-dot="${n}" aria-label="Featured story ${n+1}" aria-pressed="${!n}"></button>`).join('')}</div><button id="prev-slide" aria-label="Previous featured story">‹</button><button id="next-slide" aria-label="Next featured story">›</button></div>`;
+    featured.hidden=false;
+    document.querySelector('.app-shell')?.classList.add('home-top-feature');
     app.innerHTML=`<div class="home-grid">
-      <section class="home-card hero" aria-label="Featured publication story">${heroList.map((i,n)=>`<div class="hero-pane ${n?'':'shown'}" data-slide="${n}">${featureSlide(i)}</div>`).join('')}<div class="hero-controls" aria-label="Featured story carousel"><div class="dots">${heroList.map((_,n)=>`<button class="dot ${n?'':'active'}" data-dot="${n}" aria-label="Featured story ${n+1}" aria-pressed="${!n}"></button>`).join('')}</div><button id="prev-slide" aria-label="Previous featured story">‹</button><button id="next-slide" aria-label="Next featured story">›</button></div></section>
       <section class="home-card compact-card cartoon-tile">${sectionHead('EDITORIAL CARTOONING','cartoons')}${cartoon?`<a class="tile-image" href="${pathTo(cartoon)}">${thumb(cartoon,'eager')}</a><div class="tile-copy"><h3>${esc(cartoon.title)}</h3><p>${esc(cartoon.excerpt)}</p>${link(cartoon,'Read Editorial')}</div>`:''}</section>
       <section class="home-card compact-card info-tile">${sectionHead('INFOGRAPHICS','infographics')}${info?`<a class="tile-image" href="${pathTo(info)}">${thumb(info,'eager')}</a><div class="tile-copy">${link(info,'View Infographics')}</div>`:''}</section>
       <section class="home-card compact-card gallery-tile">${sectionHead('PICTURES','gallery')}<div class="gallery-preview"><a class="gallery-primary" href="index.html?page=gallery"><img src="assets/images/gallery-treeplanting.webp" alt="Illustration of students planting a tree"></a><div class="gallery-strip"><a href="index.html?page=gallery"><img src="assets/images/gallery-event.webp" alt="Photo gallery preview of school activity"></a><a href="index.html?page=gallery"><img src="assets/images/gallery-community.webp" alt="Photo gallery preview of community activity"></a><a href="index.html?page=gallery"><img src="assets/images/gallery-camp.webp" alt="Photo gallery preview of students outdoors"></a></div></div></section>
@@ -31,10 +34,10 @@
       <section class="home-card compact-card sports-tile">${sectionHead('SPORTS NEWS','sports')}${sports?`<a class="tile-image" href="${pathTo(sports)}">${thumb(sports,'eager')}</a><div class="tile-copy"><h3>${esc(sports.title)}</h3><p>${esc(sports.excerpt)}</p>${link(sports,'Read More')}</div>`:''}</section>
     </div>`;
     let slide=0;
-    const showSlide=x=>{if(!heroList.length)return;slide=(x+heroList.length)%heroList.length;app.querySelectorAll('.hero-pane').forEach((e,n)=>e.classList.toggle('shown',n===slide));app.querySelectorAll('.dot').forEach((e,n)=>{e.classList.toggle('active',n===slide);e.setAttribute('aria-pressed',String(n===slide));});};
-    app.querySelector('#prev-slide')?.addEventListener('click',()=>showSlide(slide-1));
-    app.querySelector('#next-slide')?.addEventListener('click',()=>showSlide(slide+1));
-    app.querySelectorAll('[data-dot]').forEach(b=>b.addEventListener('click',()=>showSlide(Number(b.dataset.dot))));
+    const showSlide=x=>{if(!heroList.length)return;slide=(x+heroList.length)%heroList.length;featured.querySelectorAll('.hero-pane').forEach((e,n)=>e.classList.toggle('shown',n===slide));featured.querySelectorAll('.dot').forEach((e,n)=>{e.classList.toggle('active',n===slide);e.setAttribute('aria-pressed',String(n===slide));});};
+    featured.querySelector('#prev-slide')?.addEventListener('click',()=>showSlide(slide-1));
+    featured.querySelector('#next-slide')?.addEventListener('click',()=>showSlide(slide+1));
+    featured.querySelectorAll('[data-dot]').forEach(b=>b.addEventListener('click',()=>showSlide(Number(b.dataset.dot))));
   }
   function listing(section){
     const [label,desc,type]=pagemeta[section],list=entries.filter(i=>i.type===type);

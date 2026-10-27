@@ -216,3 +216,61 @@
   .hero-slide>img{object-position:center center}
 }
 @media(max-width:360px){.masthead{height:67px}.side-nav{padding-top:82px}.hero h1{font-size:20px}}
+
+/* v7 — Full-width featured news at the absolute top of the home page.
+   The logo masthead and other cards follow below. */
+#featured-header[hidden]{display:none!important}
+.app-shell.home-top-feature > #featured-header{
+  display:block;
+  flex:0 0 clamp(250px,34dvh,380px);
+  width:100%;min-width:0;min-height:0;position:relative;
+  border-radius:0 0 12px 12px;box-shadow:none;isolation:isolate;
+}
+.app-shell.home-top-feature .masthead{flex-shrink:0}
+.app-shell.home-top-feature #featured-header .hero-slide > img{width:100%;height:100%;object-fit:cover;object-position:center 46%}
+.app-shell.home-top-feature #featured-header .hero-copy{
+  bottom:clamp(32px,5vh,50px);left:clamp(18px,3vw,55px);
+  right:120px;max-width:min(780px,77%);
+}
+.app-shell.home-top-feature #featured-header h1{
+  font-size:clamp(27px,3vw,52px);max-width:760px;
+  line-height:1.12;letter-spacing:-.035em;margin:8px 0;
+}
+.app-shell.home-top-feature #featured-header .hero-copy p{
+  font-size:clamp(11px,1vw,15px);-webkit-line-clamp:2;
+}
+.app-shell.home-top-feature #featured-header .hero-controls{bottom:15px;right:20px}
+@media (min-width:701px){
+  .app-shell.home-top-feature .home-grid{
+    display:grid;grid-template-columns:repeat(5,minmax(0,1fr));
+    grid-template-rows:minmax(0,1fr);height:100%;gap:10px;padding:10px;
+  }
+  .app-shell.home-top-feature .home-grid>.cartoon-tile{grid-column:1;grid-row:1}
+  .app-shell.home-top-feature .home-grid>.info-tile{grid-column:2;grid-row:1}
+  .app-shell.home-top-feature .home-grid>.gallery-tile{grid-column:3;grid-row:1}
+  .app-shell.home-top-feature .home-grid>.opinion-tile{grid-column:4;grid-row:1}
+  .app-shell.home-top-feature .home-grid>.sports-tile{grid-column:5;grid-row:1}
+}
+@media(max-width:700px){
+  .app-shell.home-top-feature > #featured-header{flex-basis:clamp(235px,33dvh,305px)}
+  .app-shell.home-top-feature #featured-header .hero-copy{
+    left:16px;right:15px;max-width:calc(100% - 31px);bottom:29px;
+  }
+  .app-shell.home-top-feature #featured-header h1{font-size:clamp(20px,5.8vw,28px);line-height:1.1;max-width:94%}
+  .app-shell.home-top-feature #featured-header .hero-copy p{font-size:10px;max-width:90%;-webkit-line-clamp:2}
+  .app-shell.home-top-feature #featured-header .hero-controls{right:8px;bottom:8px}
+  .app-shell.home-top-feature .home-grid{
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-rows:repeat(2,minmax(0,1fr));gap:7px;padding:8px;height:100%;
+  }
+  .app-shell.home-top-feature .home-grid>.cartoon-tile{grid-column:1;grid-row:1}
+  .app-shell.home-top-feature .home-grid>.info-tile{grid-column:2;grid-row:1}
+  .app-shell.home-top-feature .home-grid>.gallery-tile{grid-column:1;grid-row:2}
+  .app-shell.home-top-feature .home-grid>.sports-tile{grid-column:2;grid-row:2}
+  .app-shell.home-top-feature .home-grid>.opinion-tile{display:none}
+}
+@media(max-width:360px){
+  .app-shell.home-top-feature > #featured-header{flex-basis:225px}
+  .app-shell.home-top-feature #featured-header h1{font-size:19px}
+  .app-shell.home-top-feature #featured-header .hero-copy p{display:none}
+}
