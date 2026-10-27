@@ -1202,3 +1202,88 @@
  .app-shell:not(.home-top-feature) .masthead .brand-text>span,
  .app-shell:not(.home-top-feature) .masthead .brand-text em{text-align:left}
 }
+
+/* v31 — Subpage emblem: match the homepage circular logo and center it
+   horizontally in the left green sidebar. Keep article header text intact. */
+.app-shell:not(.home-top-feature){position:relative;}
+@media(min-width:701px){
+  .app-shell:not(.home-top-feature) > .sidebar-brandmark{
+    position:absolute;
+    display:grid;
+    place-items:center;
+    top:12px;
+    left:calc(var(--inner-side) / 2);
+    transform:translateX(-50%);
+    z-index:30;
+    width:96px;
+    height:96px;
+    margin:0;
+    padding:0;
+    border:0;
+    border-radius:0;
+    background:transparent;
+    box-shadow:none;
+  }
+  .app-shell:not(.home-top-feature) > .sidebar-brandmark img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:contain;
+    clip-path:circle(45.8% at 50% 50%);
+    border:0;
+    border-radius:0;
+    background:transparent;
+    box-shadow:none;
+  }
+  .app-shell:not(.home-top-feature) .masthead .brand img{
+    display:none!important;
+  }
+  .app-shell:not(.home-top-feature) .side-nav nav{
+    margin-top:40px;
+  }
+}
+@media(min-width:701px) and (max-width:950px){
+  .app-shell:not(.home-top-feature) > .sidebar-brandmark{
+    top:10px;
+    width:82px;
+    height:82px;
+  }
+  .app-shell:not(.home-top-feature) .side-nav nav{
+    margin-top:28px;
+  }
+}
+@media(max-width:700px){
+  .app-shell:not(.home-top-feature) > .sidebar-brandmark{
+    position:absolute;
+    top:8px;
+    left:6px;
+    display:grid;
+    place-items:center;
+    width:59px;
+    height:59px;
+    padding:0;
+    margin:0;
+    border:0;
+    background:transparent;
+    box-shadow:none;
+    z-index:30;
+  }
+  .app-shell:not(.home-top-feature) > .sidebar-brandmark img{
+    display:block;
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    clip-path:circle(45.8% at 50% 50%);
+    background:transparent;
+  }
+  .app-shell:not(.home-top-feature) .masthead .brand img{
+    display:none!important;
+  }
+}
+@media(max-width:360px){
+  .app-shell:not(.home-top-feature) > .sidebar-brandmark{
+    top:7px;
+    width:53px;
+    height:53px;
+  }
+}
