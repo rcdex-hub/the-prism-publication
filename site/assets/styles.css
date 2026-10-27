@@ -968,3 +968,27 @@
   .headline-ticker .ticker-set[aria-hidden="true"]{display:none;}
 }
 
+/* v23 — Four clean navigation destinations on desktop and mobile. */
+.side-nav nav {
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:stretch;
+  flex:0 0 auto;
+  max-height:none;
+  gap:8px;
+}
+.side-nav nav a {
+  flex:0 0 auto;
+  min-height:44px;
+  padding:9px 13px;
+}
+@media(max-width:950px) and (min-width:701px){
+  .side-nav nav{gap:6px;}
+  .side-nav nav a{min-height:41px;padding:8px 9px;}
+}
+@media(max-width:700px){
+  .bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr));}
+  .side-nav nav{gap:9px;}
+  .side-nav nav a{min-height:44px;padding:9px 13px;}
+}
