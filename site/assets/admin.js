@@ -5,7 +5,7 @@
   const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const safeImage = value => {
     const v = String(value || '').trim();
-    return /^(assets\/images\/[a-zA-Z0-9_./-]+|https:\/\/[^\s"'<>]+)$/.test(v) && !v.includes('../') ? v : 'assets/images/story-placeholder.svg';
+    return /^(assets\/images\/[a-zA-Z0-9_./-]+|https:\/\/[^\s"'<>]+)$/.test(v) && !v.includes('../') ? (v.startsWith('assets/')?'/'+v:v) : '/assets/images/story-placeholder.svg';
   };
   const clone = obj => JSON.parse(JSON.stringify(obj));
   let original = {site:{},items:[]};
@@ -228,6 +228,10 @@
         $('publish-result').textContent='Editor role: drafts and previews only. Ask an administrator to publish approved work.';
       }
       const remote=await cmsApi('content');
+      if(isAdmin&&!remote.canPublish){
+        $('publish-github').disabled=true;
+        $('publish-result').textContent='Publishing is not yet configured. Set CMS_GITHUB_TOKEN in Vercel to activate publishing.';
+      }
       original=remote.data;
       if(!Array.isArray(original.items))throw new Error('Publication data is invalid.');
       items=clone(original.items);
