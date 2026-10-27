@@ -131,3 +131,33 @@
   .masthead .header-photo { display:none; }
   .masthead .brand,.masthead .menu-toggle { z-index:2; }
 }
+
+/* v5 — extend the sidebar's dark green seamlessly to the header's top edge. */
+@media (min-width:701px) {
+  .masthead::before {
+    width:clamp(170px,13vw,205px);
+    background:#003f31;
+  }
+  .masthead::after {
+    inset:0 auto 0 calc(clamp(170px,13vw,205px) - 30px);
+  }
+}
+@media (min-width:701px) and (max-width:1200px) {
+  .masthead::before { width:170px; }
+  .masthead::after { left:140px; }
+}
+@media (min-width:701px) and (max-width:950px) {
+  .masthead::before { width:148px; }
+  .masthead::after { left:118px; }
+}
+@media (max-width:700px) {
+  /* The navigation drawer reaches the top, while content begins below the masthead. */
+  .side-nav { top:0; padding-top:94px; background:#003f31; }
+  .masthead { z-index:24; }
+  .masthead::before { background:#003f31; }
+  .masthead .brand,.masthead .menu-toggle { position:relative; z-index:25; }
+  .masthead .menu-toggle { position:absolute; }
+}
+@media (max-width:360px) {
+  .side-nav { top:0; padding-top:82px; }
+}
