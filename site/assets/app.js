@@ -21,7 +21,8 @@
   const link=(i,txt='Read more')=>`<a class="inline-action" href="${pathTo(i)}">${esc(txt)} <span aria-hidden="true">→</span></a>`;
   function sectionHead(name,url){return `<div class="section-head"><h2>${esc(name)}</h2>${url?`<a href="index.html?page=${url}" aria-label="View all ${esc(name)}">View all <span aria-hidden="true">→</span></a>`:''}</div>`;}
   function home(){
-    const heroList=[find('news'),find('feature'),find('sports')].filter(Boolean);
+    const heroCandidates=entries.filter(i=>['news','feature','sports'].includes(i.type));
+    const heroList=[...heroCandidates.filter(i=>i.featured),...heroCandidates.filter(i=>!i.featured)].slice(0,3);
     const carouselArticles=entries.filter(i=>['news','feature','editorial','cartoon','sports'].includes(i.type));
     const featureSlide=i=>`<div class="hero-slide"><img src="${validImage(i.image)}" alt="${esc(i.imageAlt||i.title)}" fetchpriority="high"><div class="hero-overlay"></div><div class="hero-copy"><span class="ribbon">${esc(category[i.type]||i.type.toUpperCase())}</span><h1>${esc(i.title)}</h1><p>${esc(i.excerpt)}</p><a class="read-btn" href="${pathTo(i)}">Read More <span>→</span></a></div></div>`;
     const featured=document.getElementById('featured-header');
@@ -37,15 +38,20 @@
       ticker.innerHTML='<span class="ticker-label">LATEST HEADLINES</span><div class="ticker-viewport"><div class="ticker-motion"><div class="ticker-set">'+oneSet+'</div><div class="ticker-set" aria-hidden="true" inert>'+oneSet+'</div></div></div>';
       ticker.hidden=false;
     }
-    const gallery=find('gallery');
-    const galleryPhotos=[
+    const galleryItems=entries.filter(i=>i.type==='gallery');
+    const gallery=galleryItems[0];
+    const sampleGallery=[
       {src:'assets/images/gallery-treeplanting.webp',title:'Campus Greening'},
       {src:'assets/images/gallery-event.webp',title:'School Activities'},
       {src:'assets/images/gallery-community.webp',title:'Community Engagement'}
     ];
+    const galleryPhotos=[
+      ...galleryItems.map(i=>({src:i.image,title:i.title,article:i})),
+      ...sampleGallery.map(i=>({...i,article:gallery}))
+    ].slice(0,3);
     const galleryPanel=gallery?`<aside class="home-gallery-panel" aria-label="Photo gallery">
       <div class="home-gallery-heading"><h2>PHOTO GALLERY</h2><a href="${pathTo(gallery)}" aria-label="View photo gallery story">View story <span aria-hidden="true">→</span></a></div>
-      <div class="home-gallery-stack">${galleryPhotos.map(photo=>`<a class="home-gallery-thumb" href="${pathTo(gallery)}" aria-label="View ${esc(photo.title)} in photo gallery"><img src="${validImage(photo.src)}" alt="${esc(photo.title)} photo gallery preview" loading="lazy"><span>${esc(photo.title)}</span></a>`).join('')}</div>
+      <div class="home-gallery-stack">${galleryPhotos.map(photo=>`<a class="home-gallery-thumb" href="${pathTo(photo.article)}" aria-label="View ${esc(photo.title)} in photo gallery"><img src="${validImage(photo.src)}" alt="${esc(photo.title)} photo gallery preview" loading="lazy"><span>${esc(photo.title)}</span></a>`).join('')}</div>
     </aside>`:'';
     app.innerHTML=`<div class="home-grid ${gallery?'with-gallery':''}"><div id="secondary-carousel-root" class="story-carousel-root"></div>${galleryPanel}</div>`;
     if(window.PrismCarousel) {

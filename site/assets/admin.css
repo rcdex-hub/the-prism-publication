@@ -33,3 +33,41 @@
 :root{--green:#007952;--forest:#003e2e;--brown:#ad872c;--ink:#19362d}
 .admin-sidebar{background:linear-gradient(175deg,#003f2d,#002b22)}
 .admin-brand img{border-radius:50%}.primary-btn{background:#007e4b}.brown-btn{background:#bf9b3b}
+
+/* Publication CMS v2 — more usable article management and preview. */
+.cms-search{
+  display:grid;grid-template-columns:1fr minmax(95px,125px);
+  align-items:end;gap:8px;margin:-3px 0 15px;
+}
+.cms-search label{
+  font-size:10px;font-weight:700;color:#365848;
+  grid-row:1;
+}
+.cms-search label:nth-of-type(2){grid-column:2;}
+.cms-search input,.cms-search select{grid-row:2;height:37px;min-width:0;}
+.cms-search input{grid-column:1;}
+.cms-search select{grid-column:2;}
+.cms-publish-steps{
+  display:flex;gap:9px;flex-wrap:wrap;align-items:center;
+  padding:12px;margin-bottom:15px;background:#f4f8f3;
+  border-radius:9px;border:1px solid #d6e8d8;
+  font-size:11px;color:#345843;
+}
+.cms-publish-steps b{color:#006646;margin-right:6px;}
+.cms-preview-dialog{
+  width:min(690px,calc(100vw - 28px));max-height:85dvh;overflow:auto;
+  border:1px solid #d3e2d7;border-radius:16px;
+  background:#fff;color:#17372c;padding:19px 22px;
+  box-shadow:0 24px 90px rgba(0,35,24,.3);
+}
+.cms-preview-dialog::backdrop{background:rgba(0,28,21,.69);}
+.cms-preview-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.cms-preview-head strong{font-size:12px;letter-spacing:.08em;color:#007952;text-transform:uppercase;}
+.cms-preview-head button{border:0;background:#e8f0e9;border-radius:50%;font-size:23px;color:#174b35;width:35px;height:35px;}
+#preview-content h2{font-size:clamp(21px,3vw,32px);margin:12px 0 7px;}
+#preview-content .cms-preview-meta{font-size:12px;color:#577063;margin-bottom:16px;}
+#preview-content figure{margin:0 0 20px;}
+#preview-content figure img{max-height:380px;width:100%;object-fit:contain;background:#ecf1eb;border-radius:11px;}
+#preview-content figcaption{font-size:10px;color:#657669;margin-top:6px;}
+#preview-content>p:not(.cms-preview-meta){font-size:13px;line-height:1.8;}
+@media(max-width:500px){.cms-search{grid-template-columns:1fr 112px;}.cms-publish-steps{display:grid;}}

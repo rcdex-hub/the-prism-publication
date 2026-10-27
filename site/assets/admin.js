@@ -13,6 +13,8 @@
   let items = [];
   let selectedId = null;
   let filter = 'all';
+  let searchText = '';
+  let statusFilter = 'all';
   let pending = new Map(); // Temporary image uploads only. Never stores GitHub credentials.
   let busy = false;
   let connectedSha = null;
@@ -31,15 +33,17 @@
   function pendingCount() { return pending.size; }
   function renderStats() {
     $('admin-stats').innerHTML = [
+      ['Total articles', items.length],
       ['Published', items.filter(i => i.status === 'published').length],
-      ['Feature Stories', items.filter(i => i.type === 'feature').length],
-      ['Editorial Cartoons', items.filter(i => i.type === 'cartoon').length],
-      ['Local image uploads', pendingCount()]
+      ['Drafts', items.filter(i => i.status !== 'published').length],
+      ['Photos to upload', pendingCount()]
     ].map(([label,num]) => `<div class="stat"><b>${num}</b><span>${esc(label)}</span></div>`).join('');
   }
   function renderList() {
-    const filtered = items.filter(i => filter === 'all' || i.type === filter).slice().sort((a,b) => (b.date||'').localeCompare(a.date||''));
-    $('filter-chip').textContent = filter === 'all' ? 'All items' : filter === 'cartoon' ? 'Cartoons' : filter.charAt(0).toUpperCase()+filter.slice(1);
+    const matchesType = i => filter === 'all' || (filter === 'drafts' ? i.status !== 'published' : filter === 'news' ? ['news','feature'].includes(i.type) : filter === 'editorial' ? ['editorial','cartoon'].includes(i.type) : i.type === filter);
+    const filtered = items.filter(i => matchesType(i) && (statusFilter === 'all' || i.status === statusFilter) && (!searchText || [i.title,i.author,i.excerpt,i.type].some(value => String(value||'').toLowerCase().includes(searchText)))).slice().sort((a,b) => (b.date||'').localeCompare(a.date||''));
+    const labels={all:'All content',news:'News & Features',editorial:'Editorial & Cartoons',sports:'Sports',gallery:'Homepage Gallery',drafts:'Drafts'};
+    $('filter-chip').textContent = labels[filter] || filter;
     $('admin-list').innerHTML = filtered.length ? filtered.map(item => `<div class="admin-item ${selectedId === item.id ? 'is-selected' : ''}">
         <img src="${esc(safeImage(item.image))}" alt="">
         <div><b>${esc(item.title)}</b><small>${item.type === 'cartoon' ? 'Cartoon' : item.type.charAt(0).toUpperCase()+item.type.slice(1)} · ${esc(item.date)}</small><span class="chip ${item.status === 'published' ? 'published' : 'draft'}">${item.status === 'published' ? 'Published' : 'Draft'}</span>${pending.has(item.id) ? ' <span class="chip neutral">Image pending</span>' : ''}</div>
@@ -58,7 +62,7 @@
     const item = items.find(i => i.id === id);
     if (!item) return;
     selectedId = item.id;
-    $('editor-title').textContent = 'Edit ' + (item.type === 'cartoon' ? 'Cartoon' : 'Feature Story');
+    $('editor-title').textContent = 'Edit ' + (item.type === 'cartoon' ? 'Editorial Cartoon' : item.type === 'gallery' ? 'Gallery Photo' : 'Article');
     $('article-id').value = item.id;
     $('article-type').value = item.type;
     $('article-title').value = item.title || '';
@@ -76,7 +80,7 @@
   }
   function newItem(type) {
     const date = new Date().toISOString().slice(0,10);
-    const item = {id:'draft-'+Date.now(),type,title:'',author:'',date,image:'assets/images/story-placeholder.svg',imageAlt:'',caption:'',excerpt:'',body:[],status:'draft',featured:false};
+    const item = {id:'draft-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,7),type,title:'',author:'',date,image:'assets/images/story-placeholder.svg',imageAlt:'',caption:'',excerpt:'',body:[],status:'draft',featured:false};
     items.unshift(item);
     persist();render();selectItem(item.id);
     notice('New item created locally. Fill in its details and select Save local draft.');
@@ -100,7 +104,7 @@
     item.status = $('article-status').value;
     item.featured = $('article-featured').checked;
     persist();render();selectItem(item.id);
-    notice('Saved in this browser only. Select Publish saved changes to make it live on GitHub Pages.');
+    notice('Saved in this browser only. Use Publish saved changes to commit to GitHub and trigger Vercel.');
   }
   function removeItem() {
     const item = items.find(i => i.id === $('article-id').value);
@@ -205,7 +209,7 @@
   }
   async function publish() {
     if (busy) return;
-    if (!confirm('Publish all saved local changes to your GitHub repository? Published entries will become public after GitHub Pages rebuilds.')) return;
+    if (!confirm('Publish all saved local changes to GitHub? Published entries will appear after Vercel deploys.')) return;
     setBusy(true);result('Checking repository…');
     try {
       // Capture current editor form changes only after Save local draft was used.
@@ -214,6 +218,11 @@
         throw new Error('GitHub content changed since this editor loaded. Reload the editor before publishing to avoid overwriting another editor’s work.');
       }
       const outgoing = clone(items);
+      for (const item of outgoing) {
+        if (!item.id || !item.title?.trim() || !item.author?.trim() || !item.date || !item.excerpt?.trim() || !Array.isArray(item.body) || !item.body.length) {
+          throw new Error('Complete and save every entry, including new drafts, before publishing. Missing details: '+(item.title||item.id||'Untitled'));
+        }
+      }
       for (const item of outgoing) {
         const staged = pending.get(item.id);
         if (!staged) continue;
@@ -224,7 +233,7 @@
           message:`Add The Prism image: ${item.title || 'New image'}`,
           content:staged.dataUrl.split(',')[1], branch:d.branch
         });
-        item.image = filename;
+        item.image = filename.replace(/^site\//,''); // public path is relative to Vercel outputDirectory=site
       }
       result('Saving publication content to GitHub…');
       const outgoingData = {...original, items:outgoing};
@@ -235,8 +244,8 @@
       });
       original=clone(outgoingData);items=clone(outgoing);pending.clear();localStorage.removeItem(DRAFT_KEY);connectedSha=null;
       render();if(selectedId)selectItem(selectedId);
-      result('Published successfully! GitHub Pages will update after deployment.');
-      notice('Your GitHub commit succeeded. Check your repository’s Actions / Pages deployment status; the live website may take a short time to reflect changes.');
+      result('Published successfully! Vercel will deploy the new content.');
+      notice('GitHub accepted your changes. Check the Vercel deployment; once Ready, the public website will show the updated articles.');
     } catch(err) {
       result(err.message,true);
       notice('Publish failed: '+err.message,true);
@@ -255,17 +264,20 @@
         catch {localStorage.removeItem(DRAFT_KEY);}
       }
       const details=JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}');
-      $('github-owner').value=details.owner||'';
-      $('github-repo').value=details.repo||'';
+      $('github-owner').value=details.owner||'rcdex-hub';
+      $('github-repo').value=details.repo||'the-prism-publication';
       $('github-branch').value=details.branch||'main';
       render();if(items.length)selectItem(items[0].id);
-    } catch(err) {notice(err.message+'. Admin editing requires the files to be hosted by GitHub Pages or another web server.',true);}
+    } catch(err) {notice(err.message+'. CMS requires a website served over HTTPS or localhost.',true);}
   }
-  $('new-feature').addEventListener('click',() => newItem('feature'));
+  $('new-feature').addEventListener('click',() => newItem('news'));
+  $('new-gallery').addEventListener('click',() => newItem('gallery'));
   $('new-cartoon').addEventListener('click',() => newItem('cartoon'));
   $('editor-form').addEventListener('submit',saveItem);
   $('delete-article').addEventListener('click',removeItem);
   $('restore-button').addEventListener('click',restore);
+  $('search-content').addEventListener('input',e=>{searchText=e.target.value.toLowerCase().trim();renderList();});
+  $('status-filter').addEventListener('change',e=>{statusFilter=e.target.value;renderList();});
   $('cancel-edit').addEventListener('click',() => { if(items.length)selectItem(items[0].id); });
   $('article-file').addEventListener('change',onImageSelected);
   $('article-image').addEventListener('input',() => {
@@ -278,6 +290,24 @@
     document.querySelectorAll('[data-filter]').forEach(b => b.classList.toggle('selected',b===btn));renderList();
   }));
   $('show-publishing').addEventListener('click',()=>$('publishing-panel').scrollIntoView({behavior:'smooth'}));
+  $('export-draft').addEventListener('click',()=>{
+    const blob=new Blob([JSON.stringify({...original,items},null,2)+'\n'],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const link=document.createElement('a');link.href=url;link.download='the-prism-content-backup.json';link.click();
+    setTimeout(()=>URL.revokeObjectURL(url),1000);
+    notice('A JSON backup of your current local edits has been exported.');
+  });
+  $('preview-article').addEventListener('click',()=>{
+    const title=$('article-title').value.trim()||'Untitled article';
+    const author=$('article-author').value.trim()||'Unknown author';
+    const date=$('article-date').value;
+    const body=$('article-body').value.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean);
+    const caption=$('article-caption').value.trim();
+    const src=pending.get($('article-id').value)?.dataUrl||safeImage($('article-image').value);
+    $('preview-content').innerHTML='<span class="chip neutral">Unpublished preview</span><h2>'+esc(title)+'</h2><p class="cms-preview-meta">By '+esc(author)+' · '+esc(date||'Date not set')+'</p><figure><img alt="'+esc(caption||title)+'" src="'+esc(src)+'"><figcaption>'+esc(caption)+'</figcaption></figure>'+body.map(p=>'<p>'+esc(p)+'</p>').join('');
+    const dialog=$('preview-dialog'); if(dialog.showModal)dialog.showModal(); else dialog.setAttribute('open','');
+  });
+  $('close-preview').addEventListener('click',()=>$('preview-dialog').close());
   $('test-github').addEventListener('click',testRepo);
   $('publish-github').addEventListener('click',publish);
   start();

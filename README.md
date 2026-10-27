@@ -1,23 +1,38 @@
-# The Prism
+# The Prism — School Publication & CMS
 
-School publication website for Calbayog City National High School. Green and gray, Poppins typography, responsive layouts, and the supplied publication emblem.
+Live site: https://the-prism-publication.vercel.app/
+Editor dashboard: https://the-prism-publication.vercel.app/admin.html
 
-## Manage the publication
+## Publication sections
+- **Home** — featured articles, moving news ticker, article carousel, and photo gallery.
+- **News** — news and feature stories.
+- **Editorial** — written editorials and editorial cartoons.
+- **Sports** — athletics and school sports stories.
 
-Open **Publication CMS** at `/admin` while signed in as the site owner. The first authenticated CMS visit on the initially private site binds that account as editor. Other accounts do not receive edit access if site viewing is later shared. Open the CMS as owner before changing audience.
+## Manage articles without editing code
 
-- **Add article**: title, author, date, category, introduction, image, caption, full story.
-- **Add cartoon**: title, artist, date, image, short message and explanation.
-- Save as **Draft** to keep content in the CMS or **Published** to display it on the website.
-- Use the pencil to edit and the trash button to delete. A confirmation appears before deletion.
-- Upload JPG, PNG or WebP images up to 5 MB. Content uses D1 storage; uploads use R2.
+1. Open **/admin.html** in your browser.
+2. Select **+ New Article**, **+ New Cartoon**, or **+ Gallery Photo**, or choose an existing entry.
+3. Fill in the title, author, publication date, summary, full story, photo, caption, and status. Select **Preview** to check the article.
+4. Select **Save browser draft**. This only saves to your current browser; it is not yet public.
+5. To publish, scroll to **Publish changes to Vercel**, enter a GitHub fine-grained personal access token, select **Check repository**, then **Publish saved changes**. Once the Vercel production deployment becomes Ready, the website reads the updated content.
 
-All initial articles and illustrations are labeled placeholder content. The first story image and masthead emblem display portions of the supplied publication reference; replace the story photograph before real reporting is published. No payment, subscription or contact forms are included.
+Repository defaults: `rcdex-hub/the-prism-publication`, branch `main`.
+Only grant the token **Contents: Read and write** access to **this repository**. The token is **never saved in browser storage or project files**. Do not share it or enter it into untrusted websites.
 
-## Development
+The CMS page itself is not password-protected; **publishing** is protected by GitHub authorization. Anyone who opens the CMS can edit drafts in their own browser, but they cannot commit without a token with repository write access. A separate identity system is needed for school-wide roles and logins.
 
-This project uses the Sites Vinext starter. Preserve its Sites Vite integration and platform-owned sign-in routes.
+The **Export backup** action downloads a local JSON backup. Uploaded JPG, PNG, or WEBP media (under 6 MB before compression) is stored in `site/assets/images/uploads/`, and the public image reference uses `assets/images/uploads/`.
 
-`npm run dev` starts local preview. Portable local sign-in uses `seedy@sites.test`; this mock sign-in is excluded from production. `npm run build` creates the production Worker. `npm run db:generate` creates schema migrations. Apply new local migrations using Wrangler as described in the Sites skill. Production migrations are applied by Sites during deployment.
+### Workflow reminders
+- Draft posts are hidden from the website until their status becomes Published **and** changes are committed.
+- Each featured article marked **Highlight on homepage** is prioritized in the main news header.
+- New Gallery entries update the homepage photo strip, with sample images used as fallback.
+- If another editor changes `site/content/articles.json`, publishing stops with a conflict warning instead of silently overwriting their work. Reload the CMS and reconcile the changes before retrying.
+- Only publish verified content with appropriate permissions for photographs of students.
 
-The source manifest is `.openai/hosting.json`, with `DB` and `BUCKET` bindings. Do not put secrets or database contents in source. The Sites helper manages source synchronization, packaging and publication.
+## Technical structure
+
+Static HTML/CSS/JS hosted on **Vercel**, output directory `site` (see `vercel.json`). Published records live in `site/content/articles.json`. The browser-based CMS uses the GitHub Contents API with a repository-scoped user-provided token for updates. Images are committed as separate files.
+
+No database, payments, subscriptions, or public sign-up forms.
