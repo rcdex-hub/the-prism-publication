@@ -14,3 +14,50 @@
 @media(max-width:700px){.app-shell{height:100dvh}.masthead{height:80px;padding:6px 12px;border-bottom:2px solid #e0e8e3;background:linear-gradient(90deg,#fff 55%,#c8e5d6)}.masthead:after{display:none}.header-photo{opacity:.13;inset:0 0 0 45%}.brand{gap:8px}.brand img{height:62px;width:62px}.brand-text strong{font-size:clamp(26px,7.4vw,39px);letter-spacing:-.06em}.brand-text>span{font-size:6.4px;letter-spacing:.12em}.brand-text em{font-size:5.8px;letter-spacing:.25em}.mast-quote{display:none}.menu-toggle{display:block;position:absolute;right:10px;top:19px;border:0;background:#056343;color:white;border-radius:9px;width:35px;height:37px;font-size:23px;z-index:21;line-height:1}.page-layout{display:block;min-height:0;flex:1}.side-nav{position:fixed;top:80px;bottom:54px;left:0;width:235px;z-index:22;transform:translateX(-110%);transition:transform .2s;box-shadow:0 12px 22px #09251d44;padding:13px}.side-nav.opened{transform:translateX(0)}.side-nav nav{max-height:none}.side-nav nav a{font-size:12px}.side-nav nav a span{font-size:19px}.sidebar-bottom{display:none}#app{height:100%;width:100%}.bottom-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;z-index:19;bottom:0;left:0;right:0;height:calc(57px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:white;border-top:1px solid #d6e3dd;box-shadow:0 -2px 16px #1245341b}.bottom-nav a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;color:#687972;font-weight:600;font-size:9px}.bottom-nav a span{font-size:20px;line-height:1.2}.bottom-nav a.active{color:#007f52}.page-layout{padding-bottom:57px}.home-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:minmax(0,1.2fr) minmax(0,.8fr) minmax(0,.8fr);gap:7px;padding:8px;height:100%}.hero{grid-column:1/-1}.hero-copy{left:15px;right:8px;bottom:12px}.hero h1{font-size:clamp(17px,5vw,25px);line-height:1.1;margin:7px 0 3px;max-width:270px}.hero-copy p{font-size:9px;line-height:1.35;-webkit-line-clamp:2;max-width:270px;margin-bottom:7px}.ribbon{font-size:8px;padding:5px 8px}.read-btn{font-size:9px;padding:5px 10px}.hero-controls{right:9px;bottom:8px;gap:4px}.hero-controls>button{width:23px;height:23px;font-size:17px}.dots{gap:4px;margin-right:4px}.dots button{height:7px;width:7px}.compact-card{padding:5px;gap:3px}.section-head{min-height:21px}.section-head h2{font-size:8px;padding:5px 6px}.section-head a{display:none}.tile-copy{padding:2px 4px 4px}.tile-copy h3{font-size:10px;line-height:1.15;margin:0 0 3px;-webkit-line-clamp:2}.tile-copy p,.tile-copy .inline-action{display:none}.cartoon-tile{grid-column:1;grid-row:2}.info-tile{grid-column:2;grid-row:2}.gallery-tile{grid-column:1;grid-row:3}.sports-tile{grid-column:2;grid-row:3}.opinion-tile{display:none}.gallery-preview{grid-template-rows:minmax(0,1fr) minmax(25px,.35fr);gap:3px}.gallery-strip{gap:3px}.tile-image{border-radius:4px}.inner-page{padding:12px;height:100%;padding-bottom:20px}.page-title{padding:14px;margin-bottom:10px;align-items:flex-start;flex-direction:column;gap:6px}.page-title h1{font-size:24px}.page-title p{font-size:11px}.eyebrow{font-size:9px}.demo-hint{font-size:8px;padding:5px 8px}.story-list{display:block}.list-card{grid-template-columns:36% minmax(0,1fr);margin-bottom:10px;border-radius:10px}.list-img{min-height:130px;max-height:none}.list-content{padding:10px;gap:5px}.list-content h2{font-size:14px}.list-content p{font-size:10px;-webkit-line-clamp:2}.list-content .meta{font-size:9px}.list-content .inline-action{font-size:10px}.label-chip{padding:4px 6px;font-size:8px}.article-layout{display:block}.article-photo{margin-bottom:13px}.article-photo img{max-height:240px}.article-text{padding:18px}.article-text h1{font-size:23px}.article-text p{font-size:12px}.breadcrumbs{font-size:10px;line-height:1.5}.about-panel{display:block;margin:0;padding:21px}.about-panel img{height:120px;width:120px;margin:0 auto 12px}.about-panel h1{font-size:26px}.about-panel p{font-size:12px}}
 @media(max-width:360px){.brand img{height:53px;width:53px}.brand-text strong{font-size:25px}.brand-text>span{font-size:5.6px}.masthead{height:69px}.side-nav{top:69px}.home-grid{padding:6px;gap:6px}.hero-copy p{display:none}.tile-copy h3{font-size:9px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+
+
+/* 2026-10-27 — approved continuous green-and-gold masthead.
+   Desktop artwork is an intentionally cropped banner; the existing semantic
+   home link remains available. Mobile retains live text at readable sizes. */
+@media (min-width:701px){
+  .masthead{
+    background:#e7f2e9 url('images/prism-masthead.webp') center center / 100% 100% no-repeat;
+    padding:0;
+    border-bottom:2px solid #7eb29c;
+  }
+  .masthead::before,.masthead::after,.masthead .header-photo,.masthead .mast-quote{display:none}
+  .masthead .brand{
+    position:absolute;
+    inset:0 auto 0 0;
+    width:70%;
+    height:100%;
+    opacity:0;
+    display:block;
+    z-index:2;
+  }
+  .masthead:focus-within{outline:3px solid var(--gold);outline-offset:-3px}
+}
+@media (max-width:700px){
+  .masthead{
+    background:
+      linear-gradient(128deg,rgba(0,88,56,.25) 0 12%,rgba(241,199,76,.35) 12.2% 15%,transparent 15.2%),
+      linear-gradient(128deg,transparent 0 77%,rgba(241,199,76,.55) 77.2% 79%,transparent 79.2%),
+      linear-gradient(108deg,#cdecd9 0%,#f9fff9 38%,#e5f7ec 67%,#9bd2bb 100%);
+  }
+  .masthead::before{
+    content:"";
+    position:absolute;
+    inset:0 auto 0 0;
+    width:31%;
+    background:url('images/campus-header.webp') left center/cover no-repeat;
+    opacity:.14;
+    pointer-events:none;
+    z-index:0;
+  }
+  .masthead .brand{z-index:1}
+  .masthead .header-photo{
+    opacity:.20;
+    inset:0 0 0 65%;
+    clip-path:polygon(20% 0,100% 0,100% 100%,0 100%);
+  }
+}
