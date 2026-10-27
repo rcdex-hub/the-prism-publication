@@ -20,19 +20,18 @@
   function sectionHead(name,url){return `<div class="section-head"><h2>${esc(name)}</h2>${url?`<a href="index.html?page=${url}" aria-label="View all ${esc(name)}">View all <span aria-hidden="true">→</span></a>`:''}</div>`;}
   function home(){
     const heroList=[find('news'),find('feature'),find('sports')].filter(Boolean);
-    const cartoon=find('cartoon'), info=find('infographic'),pic=find('gallery'),opinion=find('editorial'),sports=find('sports');
+    const cartoon=find('cartoon'),opinion=find('editorial'),sports=find('sports');
     const featureSlide=i=>`<div class="hero-slide"><img src="${validImage(i.image)}" alt="${esc(i.imageAlt||i.title)}" fetchpriority="high"><div class="hero-overlay"></div><div class="hero-copy"><span class="ribbon">${esc(category[i.type]||i.type.toUpperCase())}</span><h1>${esc(i.title)}</h1><p>${esc(i.excerpt)}</p><a class="read-btn" href="${pathTo(i)}">Read More <span>→</span></a></div></div>`;
     const featured=document.getElementById('featured-header');
     featured.innerHTML=`${heroList.map((i,n)=>`<div class="hero-pane ${n?'':'shown'}" data-slide="${n}">${featureSlide(i)}</div>`).join('')}<div class="hero-controls" aria-label="Featured story carousel"><div class="dots">${heroList.map((_,n)=>`<button class="dot ${n?'':'active'}" data-dot="${n}" aria-label="Featured story ${n+1}" aria-pressed="${!n}"></button>`).join('')}</div><button id="prev-slide" aria-label="Previous featured story">‹</button><button id="next-slide" aria-label="Next featured story">›</button></div>`;
     featured.hidden=false;
     document.querySelector('.app-shell')?.classList.add('home-top-feature');
-    app.innerHTML=`<div class="home-grid">
-      <section class="home-card compact-card cartoon-tile">${sectionHead('EDITORIAL CARTOONING','cartoons')}${cartoon?`<a class="tile-image" href="${pathTo(cartoon)}">${thumb(cartoon,'eager')}</a><div class="tile-copy"><h3>${esc(cartoon.title)}</h3><p>${esc(cartoon.excerpt)}</p>${link(cartoon,'Read Editorial')}</div>`:''}</section>
-      <section class="home-card compact-card info-tile">${sectionHead('INFOGRAPHICS','infographics')}${info?`<a class="tile-image" href="${pathTo(info)}">${thumb(info,'eager')}</a><div class="tile-copy">${link(info,'View Infographics')}</div>`:''}</section>
-      <section class="home-card compact-card gallery-tile">${sectionHead('PICTURES','gallery')}<div class="gallery-preview"><a class="gallery-primary" href="index.html?page=gallery"><img src="assets/images/gallery-treeplanting.webp" alt="Illustration of students planting a tree"></a><div class="gallery-strip"><a href="index.html?page=gallery"><img src="assets/images/gallery-event.webp" alt="Photo gallery preview of school activity"></a><a href="index.html?page=gallery"><img src="assets/images/gallery-community.webp" alt="Photo gallery preview of community activity"></a><a href="index.html?page=gallery"><img src="assets/images/gallery-camp.webp" alt="Photo gallery preview of students outdoors"></a></div></div></section>
-      <section class="home-card compact-card opinion-tile">${sectionHead('EDITORIAL','editorial')}${opinion?`<a class="tile-image" href="${pathTo(opinion)}">${thumb(opinion,'eager')}</a><div class="tile-copy"><h3>${esc(opinion.title)}</h3><p>${esc(opinion.excerpt)}</p>${link(opinion,'Read Editorial')}</div>`:''}</section>
-      <section class="home-card compact-card sports-tile">${sectionHead('SPORTS NEWS','sports')}${sports?`<a class="tile-image" href="${pathTo(sports)}">${thumb(sports,'eager')}</a><div class="tile-copy"><h3>${esc(sports.title)}</h3><p>${esc(sports.excerpt)}</p>${link(sports,'Read More')}</div>`:''}</section>
-    </div>`;
+    app.innerHTML='<div class="home-grid"><div id="secondary-carousel-root" class="story-carousel-root"></div></div>';
+    if(window.PrismCarousel) {
+      window.PrismCarousel.mount(document.getElementById('secondary-carousel-root'),[cartoon,opinion,sports].filter(Boolean),{
+        esc:esc,validImage:validImage,pathTo:pathTo,category:category
+      });
+    }
     let slide=0,rotationTimer=null;
     const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
     let userPaused=reducedMotion.matches;
