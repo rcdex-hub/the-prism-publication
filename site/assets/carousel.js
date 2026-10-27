@@ -19,13 +19,18 @@
         '<span class="story-carousel-copy story-carousel-overlay"><strong>'+title+'</strong>'+
         '<span class="story-carousel-link">'+action+' <span aria-hidden="true">→</span></span></span></a>';
     }
+    // Lightweight vector icons remain sharp on all devices.
+    var chevronPrev='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m14.5 5-7 7 7 7"/></svg>';
+    var chevronNext='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9.5 5 7 7-7 7"/></svg>';
+    var pauseIcon='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
+    var playIcon='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M8 5.5a1 1 0 0 1 1.53-.85l10 6.5a1 1 0 0 1 0 1.7l-10 6.5A1 1 0 0 1 8 18.5z"/></svg>';
     var oneSet=articles.map(card).join('');
     root.innerHTML='<section class="story-carousel" role="region" aria-roledescription="carousel" aria-label="Published articles from News, Editorial and Sports">'+
       '<div class="story-carousel-toolbar"><span class="story-carousel-heading">NEWS, EDITORIAL &amp; SPORTS <small class="story-carousel-total">'+count+' ARTICLES</small></span>'+
       '<div class="story-carousel-actions">'+
-      '<button type="button" data-story-prev aria-label="Previous stories" title="Previous stories">‹</button>'+
-      '<button type="button" data-story-pause aria-label="Pause rotating stories" title="Pause rotating stories">Ⅱ</button>'+
-      '<button type="button" data-story-next aria-label="Next stories" title="Next stories">›</button></div></div>'+
+      '<button class="carousel-icon-btn" type="button" data-story-prev aria-label="Previous stories" title="Previous stories">'+chevronPrev+'</button>'+
+      '<button class="carousel-icon-btn carousel-icon-btn--playback" type="button" data-story-pause aria-label="Pause rotating stories" aria-pressed="false" title="Pause rotating stories">'+pauseIcon+'</button>'+
+      '<button class="carousel-icon-btn" type="button" data-story-next aria-label="Next stories" title="Next stories">'+chevronNext+'</button></div></div>'+
       '<div class="story-carousel-viewport"><div class="story-carousel-track">'+oneSet+oneSet+'</div></div></section>';
     var carousel=root.querySelector('.story-carousel');
     var track=root.querySelector('.story-carousel-track');
@@ -57,7 +62,8 @@
       });
     }
     function updatePause() {
-      pause.textContent=userPaused?'▶':'Ⅱ';
+      pause.innerHTML=userPaused?playIcon:pauseIcon;
+      pause.setAttribute('aria-pressed',String(userPaused));
       var label=userPaused?'Play rotating stories':'Pause rotating stories';
       pause.setAttribute('aria-label',label);pause.title=label;
     }
