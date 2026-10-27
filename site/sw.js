@@ -1,5 +1,5 @@
 /* Offline cache for The Prism. Registration works over HTTPS or localhost. */
-const CACHE='the-prism-v38-20261028-cms-auth';
+const CACHE='the-prism-v39-20261028-secure-cms';
 const CORE=['./','./index.html','./assets/styles.css','./assets/app.js','./assets/carousel.js','./content/articles.json','./assets/images/prism-logo.webp','./assets/images/prism-wordmark-gold.webp','./assets/images/prism-wordmark-gold-complete.webp','./assets/images/prism-masthead.webp','./assets/images/icon-192.png','./assets/images/icon-512.png','./assets/images/campus-feature-clean.webp','./assets/images/cartoon-choices.webp','./assets/images/infographic-newsroom.webp','./assets/images/gallery-treeplanting.webp','./assets/images/gallery-event.webp','./assets/images/gallery-community.webp','./assets/images/editorial-pen.webp','./assets/images/sports-basketball.webp','./manifest.webmanifest'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));});
@@ -8,7 +8,7 @@ self.addEventListener('fetch',event=>{
  if(req.method!=='GET'||new URL(req.url).origin!==location.origin) return;
  // Fail closed for the editor. Login scripts/pages are never cached by the service worker.
  const path=new URL(req.url).pathname;
- if(path.endsWith('/admin.html')||path.endsWith('/assets/admin.js')||path.endsWith('/assets/admin.css')){
+ if(path.startsWith('/api/')||path.endsWith('/admin.html')||path.endsWith('/assets/admin.js')||path.endsWith('/assets/admin.css')){
   event.respondWith(fetch(req,{cache:'no-store'}));
   return;
  }

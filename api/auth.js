@@ -10,7 +10,7 @@ export default async function handler(req,res){
   }
   if(action==='start'&&req.method==='GET'){
     if(!process.env.GITHUB_OAUTH_CLIENT_ID||!process.env.GITHUB_OAUTH_CLIENT_SECRET||!process.env.CMS_SESSION_SECRET){
-      return send(res,503,{error:'GitHub OAuth login has not been configured in Vercel environment variables.'});
+      return redirect(res,'/admin.html?error=config');
     }
     const state=crypto.randomBytes(24).toString('hex');
     setCookie(res,STATE_COOKIE,state,'Max-Age=600');
