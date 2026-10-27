@@ -218,7 +218,15 @@
       const response=await fetch('/api/auth?action=session',{cache:'no-store',credentials:'same-origin'});
       if(!response.ok){location.replace('/admin.html');return;}
       const identity=await response.json();
-      $('cms-editor-identity').textContent='Verified GitHub editor: @'+identity.user;
+      const isAdmin=identity.role==='admin';
+      $('cms-editor-identity').textContent='Signed in: '+identity.user+' · '+(isAdmin?'Administrator':'Editor');
+      if(!isAdmin){
+        $('publish-github').disabled=true;
+        $('test-github').disabled=true;
+        $('show-publishing').disabled=true;
+        $('publishing-panel').hidden=true;
+        $('publish-result').textContent='Editor role: drafts and previews only. Ask an administrator to publish approved work.';
+      }
       const remote=await cmsApi('content');
       original=remote.data;
       if(!Array.isArray(original.items))throw new Error('Publication data is invalid.');

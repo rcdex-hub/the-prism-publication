@@ -1,17 +1,46 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#003e2e"><title>CMS Login | The Prism</title>
-<link rel="icon" href="/assets/images/icon-192.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="theme-color" content="#003e2e">
+<title>Admin Login | The Prism</title>
+<link rel="icon" href="/assets/images/icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:16px;background:radial-gradient(circle at 85% 10%,#23684b,#003b2d 45%,#00261d);font-family:Poppins,system-ui,sans-serif;color:#103c2b}.card{background:white;border-radius:18px;padding:clamp(22px,4vw,36px);max-width:480px;width:100%;box-shadow:0 20px 75px #001d1780}.brand{display:flex;align-items:center;gap:12px;font-size:23px;font-weight:800}.brand img{height:65px;width:65px;object-fit:contain}.brand small{display:block;font-size:10px;color:#678077;letter-spacing:.12em;margin-top:3px}.tag{display:inline-block;background:#e4f2e9;color:#00734e;font-size:10px;font-weight:800;padding:5px 8px;border-radius:5px;margin-top:22px}h1{font-size:27px;margin:9px 0 5px}p{color:#607166;font-size:12px;line-height:1.65}.button{display:block;text-decoration:none;background:#007e50;color:white;text-align:center;font-weight:800;font-size:14px;padding:13px;border-radius:9px;margin:19px 0 12px}.button:hover{background:#009463}.note{background:#f3f8f5;padding:11px;border-radius:8px;font-size:11px}.back{font-size:12px;font-weight:700;color:#006f49;text-decoration:none}#err{display:none;color:#aa372a;background:#fff0ed;padding:9px;border-radius:8px}
-</style></head><body><main class="card"><div class="brand"><img src="/assets/images/prism-logo.webp" alt="The Prism logo"><span>THE PRISM<small>CCNHS · PUBLICATION CMS</small></span></div><span class="tag">SECURE STAFF ACCESS</span><h1>Admin Dashboard</h1>
-<p>Sign in with GitHub. Your account must have permission to publish to the official The Prism repository.</p>
-<p id="err" role="alert"></p><a class="button" href="/api/auth?action=start">Sign in with GitHub</a>
-<p class="note">GitHub handles passwords and two-factor authentication. The Prism only accepts accounts with repository write access and checks those permissions on the server.</p>
-<a class="back" href="/">← Back to The Prism</a></main>
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;display:grid;place-items:center;padding:16px;background:radial-gradient(circle at 82% 10%,#286c4f,#003b2d 47%,#00261d);font-family:Poppins,system-ui,sans-serif;color:#103c2b}.card{background:#fff;border-radius:19px;padding:clamp(22px,4vw,36px);max-width:470px;width:100%;box-shadow:0 20px 75px #001d1780}.brand{display:flex;align-items:center;gap:12px;font-size:23px;font-weight:800}.brand img{height:64px;width:64px;object-fit:contain}.brand small{display:block;font-size:10px;color:#678077;letter-spacing:.12em;margin-top:4px}.tag{display:inline-block;background:#e4f2e9;color:#00734e;font-size:10px;font-weight:800;padding:5px 8px;border-radius:5px;margin-top:20px}h1{font-size:27px;margin:9px 0 5px}p{color:#607166;font-size:12px;line-height:1.65}form{display:grid;gap:11px;margin:18px 0 10px}label{font-size:12px;font-weight:700;display:grid;gap:5px}input,select{width:100%;border:1px solid #c6d6cc;border-radius:8px;padding:11px;font:500 13px Poppins,system-ui,sans-serif;color:#164533;background:white}input:focus,select:focus{outline:2px solid #d0ae4d;outline-offset:1px}button{border:0;background:#007e50;color:white;cursor:pointer;padding:12px;border-radius:9px;font:800 14px Poppins,system-ui,sans-serif;margin-top:5px}button:hover{background:#009463}button:disabled{opacity:.55;cursor:progress}.note{background:#f3f8f5;padding:11px;border-radius:8px;font-size:11px}.alt{display:block;text-align:center;font-size:11px;font-weight:700;color:#006f49;margin:15px 0 5px}.back{font-size:12px;font-weight:700;color:#006f49;text-decoration:none}#err{display:none;color:#a63325;background:#fff0ed;padding:9px;border-radius:8px;font-weight:600}#err:not(:empty){display:block}
+</style></head>
+<body><main class="card">
+<div class="brand"><img src="/assets/images/prism-logo.webp" alt="The Prism logo"><span>THE PRISM<small>CCNHS · PUBLICATION CMS</small></span></div>
+<span class="tag">SECURE STAFF ACCESS</span><h1>Admin Login</h1>
+<p>Enter your staff credentials. Your role is verified against the publication's Supabase staff records.</p>
+<p id="err" role="alert"></p>
+<form id="login-form">
+<label for="username">Username<input id="username" name="username" type="text" required minlength="3" maxlength="32" pattern="[A-Za-z0-9][A-Za-z0-9._-]{2,31}" autocomplete="username" placeholder="Your staff username"></label>
+<label for="password">Password<input id="password" name="password" type="password" required minlength="8" autocomplete="current-password" placeholder="Enter your password"></label>
+<label for="role">Role<select id="role" name="role" required><option value="admin">Administrator</option><option value="editor">Editor</option></select></label>
+<button id="sign-in" type="submit">Sign In</button>
+</form>
+<p class="note">Administrators can publish articles. Editors can create and preview local drafts. Supabase verifies the password and database-assigned role. Credentials are never stored in the website.</p>
+<a class="alt" href="/api/auth?action=start">Use existing GitHub sign-in instead</a>
+<a class="back" href="/">← Back to The Prism</a>
+</main>
 <script>
-const errors={config:'GitHub OAuth must be configured by the site administrator in Vercel.',state:'Your sign-in attempt expired. Please retry.',login:'GitHub sign-in failed. Please retry.',access:'Your GitHub account is not authorized to edit The Prism.'};
-const e=errors[new URLSearchParams(location.search).get('error')];
-if(e){let n=document.getElementById('err');n.textContent=e;n.style.display='block';}
-fetch('/api/auth?action=session',{credentials:'same-origin',cache:'no-store'}).then(r=>{if(r.ok)location.replace('/api/dashboard');}).catch(()=>{});
+const errors={config:'GitHub OAuth needs configuration.',state:'Your sign-in request expired.',login:'GitHub sign-in failed.',access:'This GitHub account is not authorized.'};
+const err=document.getElementById('err');const code=new URLSearchParams(location.search).get('error');if(errors[code])err.textContent=errors[code];
+document.getElementById('login-form').addEventListener('submit',async(event)=>{
+ event.preventDefault();const button=document.getElementById('sign-in');button.disabled=true;button.textContent='Verifying…';err.textContent='';
+ try{
+  const response=await fetch('/api/auth?action=login',{
+   method:'POST',credentials:'same-origin',cache:'no-store',headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({
+    username:document.getElementById('username').value.trim().toLowerCase(),
+    password:document.getElementById('password').value,
+    role:document.getElementById('role').value
+   })
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok)throw Error(result.error||'Unable to sign in');
+  document.getElementById('password').value='';
+  location.assign('/api/dashboard');
+ }catch(error){err.textContent=error.message;button.disabled=false;button.textContent='Sign In';}
+});
+fetch('/api/auth?action=session',{cache:'no-store',credentials:'same-origin'}).then(r=>{if(r.ok)location.replace('/api/dashboard');}).catch(()=>{});
 </script></body></html>

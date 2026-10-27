@@ -111,3 +111,5 @@
 .cms-editor-identity{display:block;margin-top:6px;color:#087751!important;font-size:11px!important;letter-spacing:0!important;}
 .admin-sidebar #cms-sign-out{color:#ffe1a3;}
 @media(max-width:480px){.cms-access-card{padding:20px;}.cms-access-brand{font-size:20px;}}
+/* Server-assigned editor role cannot display the publishing form. */
+.admin-page #publishing-panel[hidden]{display:none!important;}
