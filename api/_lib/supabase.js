@@ -32,7 +32,7 @@ export async function staffById(id){
  return (await query('/rest/v1/prism_cms_staff?select=user_id,username,role,active&user_id=eq.'+encodeURIComponent(id)+'&limit=1'))?.[0]||null;
 }
 export async function authenticateStaff(username,password,selectedRole){
- if(typeof password!=='string'||password.length<8||password.length>256)return null;
+ if(typeof password!=='string'||password.length===0||password.length>256)return null;
  if(!['admin','editor'].includes(selectedRole))return null;
  const staff=await staffByUsername(username);
  // Selected role must match the trusted database entry, never the form alone.
