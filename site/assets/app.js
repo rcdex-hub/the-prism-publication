@@ -26,6 +26,15 @@
     featured.innerHTML=`${heroList.map((i,n)=>`<div class="hero-pane ${n?'':'shown'}" data-slide="${n}">${featureSlide(i)}</div>`).join('')}<div class="hero-controls" aria-label="Featured story carousel"><div class="dots">${heroList.map((_,n)=>`<button class="dot ${n?'':'active'}" data-dot="${n}" aria-label="Featured story ${n+1}" aria-pressed="${!n}"></button>`).join('')}</div><button id="prev-slide" aria-label="Previous featured story">‹</button><button id="next-slide" aria-label="Next featured story">›</button></div>`;
     featured.hidden=false;
     document.querySelector('.app-shell')?.classList.add('home-top-feature');
+    // Published CMS articles provide a click-through, auto-scrolling headline strip.
+    const ticker=document.getElementById('headline-ticker');
+    const headlineItems=entries.filter(item=>['news','feature','sports','editorial','cartoon'].includes(item.type)).slice(0,8);
+    if(ticker && headlineItems.length){
+      const renderHeadline=item=>'<a class="ticker-item" href="'+pathTo(item)+'"><span class="ticker-kind">'+esc(category[item.type]||item.type)+'</span><span class="ticker-title">'+esc(item.title)+'</span></a>';
+      const oneSet=headlineItems.map(renderHeadline).join('<span class="ticker-separator" aria-hidden="true">✦</span>');
+      ticker.innerHTML='<span class="ticker-label">LATEST HEADLINES</span><div class="ticker-viewport"><div class="ticker-motion"><div class="ticker-set">'+oneSet+'</div><div class="ticker-set" aria-hidden="true" inert>'+oneSet+'</div></div></div>';
+      ticker.hidden=false;
+    }
     app.innerHTML='<div class="home-grid"><div id="secondary-carousel-root" class="story-carousel-root"></div></div>';
     if(window.PrismCarousel) {
       window.PrismCarousel.mount(document.getElementById('secondary-carousel-root'),[cartoon,opinion,sports].filter(Boolean),{
