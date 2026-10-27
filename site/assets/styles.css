@@ -1098,3 +1098,73 @@
 /* v26 — Only the unobtrusive slide-position dots remain on the main hero.
    Editorial-card carousel controls are intentionally unaffected. */
 .app-shell.home-top-feature #featured-header .dots { margin-right:0; }
+
+/* v28 — Right-align the publication name on inner pages.
+   Keep the round school emblem on the left and inset the lettering from
+   the right edge. Home has its own gold wordmark and is not modified. */
+@media(min-width:701px){
+  .app-shell:not(.home-top-feature) .masthead{
+    padding-right:clamp(22px,3.4vw,58px);
+  }
+  .app-shell:not(.home-top-feature) .masthead .brand{
+    display:flex;
+    flex:1 1 auto;
+    width:100%;
+    max-width:100%;
+    justify-content:space-between;
+    align-items:center;
+    min-width:0;
+  }
+  .app-shell:not(.home-top-feature) .masthead .brand-text{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    text-align:right;
+    margin-left:auto;
+    min-width:0;
+    max-width:calc(100% - 75px);
+  }
+  .app-shell:not(.home-top-feature) .masthead .brand-text>span,
+  .app-shell:not(.home-top-feature) .masthead .brand-text em{
+    white-space:normal;
+    text-align:right;
+  }
+}
+@media(max-width:700px){
+  .app-shell:not(.home-top-feature) .masthead{
+    padding-right:59px;
+    padding-left:10px;
+  }
+  .app-shell:not(.home-top-feature) .masthead .brand{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex:1 1 auto;
+    width:100%;
+    max-width:100%;
+    gap:6px;
+    min-width:0;
+  }
+  .app-shell:not(.home-top-feature) .masthead .brand-text{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-end;
+    text-align:right;
+    flex:0 1 auto;
+    min-width:0;
+    margin-left:auto;
+    max-width:calc(100% - 55px);
+  }
+  .app-shell:not(.home-top-feature) .masthead .brand-text strong{
+    font-size:clamp(18px,5.8vw,29px);
+    line-height:1.05;
+    white-space:nowrap;
+  }
+  .app-shell:not(.home-top-feature) .masthead .brand-text>span,
+  .app-shell:not(.home-top-feature) .masthead .brand-text em{
+    white-space:normal;
+    text-align:right;
+    line-height:1.2;
+    letter-spacing:.08em;
+  }
+}
