@@ -1168,3 +1168,9 @@
     letter-spacing:.08em;
   }
 }
+
+/* v29 — Remove the thin green divider under the inner-page masthead. */
+.app-shell:not(.home-top-feature) .masthead {
+  border-bottom:0;
+  box-shadow:none;
+}
