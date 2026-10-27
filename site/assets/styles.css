@@ -476,3 +476,44 @@
   }
   .app-shell.home-top-feature .masthead .menu-toggle{left:55px;}
 }
+
+/* v11 — show only the circular school publication emblem. No card,
+   border, padding, rectangular white image background, or placeholder. */
+.app-shell.home-top-feature > .sidebar-brandmark{
+  width:96px;
+  height:96px;
+  padding:0;
+  margin:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+.app-shell.home-top-feature > .sidebar-brandmark img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  background:transparent;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  clip-path:circle(45.8% at 50% 50%);
+}
+@media (min-width:701px) and (max-width:950px){
+  .app-shell.home-top-feature > .sidebar-brandmark{
+    width:82px;height:82px;
+  }
+}
+@media (max-width:700px){
+  .app-shell.home-top-feature > .sidebar-brandmark{
+    width:59px;height:59px;padding:0;
+  }
+  .app-shell.home-top-feature > .sidebar-brandmark img{
+    width:100%;height:100%;
+  }
+}
+@media (max-width:360px){
+  .app-shell.home-top-feature > .sidebar-brandmark{
+    width:53px;height:53px;padding:0;
+  }
+}
