@@ -1,5 +1,13 @@
 import crypto from 'node:crypto';
 import {REPO,BRANCH,send,authorize,sameOrigin,isJson,github,handleError} from './_lib/auth.js';
+function publishingToken(user){
+ if(user.provider==='supabase'){
+  if(!process.env.CMS_GITHUB_TOKEN){const e=new Error('Server publishing key not configured');e.status=503;throw e;}
+  return process.env.CMS_GITHUB_TOKEN;
+ }
+ if(user.provider==='github'&&user.token)return user.token;
+ const e=new Error('CMS publication permission unavailable');e.status=401;throw e;
+}
 const CONTENT='site/content/articles.json';
 const SUPPORTED=new Set(['news','feature','editorial','cartoon','sports','gallery','infographic','video']);
 function cleanStr(x,max){return String(x??'').slice(0,max);}
@@ -26,11 +34,12 @@ export default async function handler(req,res){
   const action=typeof req.query?.action==='string'?req.query.action:'content';
   if(req.method==='GET'&&action==='content'){
     try{
-      const remote=await currentFile(user.token);
+      const remote=await currentFile(publishingToken(user));
       return send(res,200,{data:remote.parsed,sha:remote.sha});
     }catch(e){return handleError(res,e);}
   }
   if(req.method!=='POST'||!sameOrigin(req)||!isJson(req))return send(res,403,{error:'Unauthorized request'});
+  if(user.role!=='admin')return send(res,403,{error:'Only administrators can upload and publish'});
   const body=req.body;
   if(!body||typeof body!=='object')return send(res,400,{error:'Expected JSON body'});
   try{
@@ -41,14 +50,14 @@ export default async function handler(req,res){
       if(!bytes.length||bytes.length>2*1024*1024||bytes[0]!==0xff||bytes[1]!==0xd8)return send(res,413,{error:'Image is invalid or larger than 2MB after compression'});
       const slug=cleanStr(body.id||'image',48).toLowerCase().replace(/[^a-z0-9-]/g,'-');
       const path='site/assets/images/uploads/'+slug+'-'+crypto.randomBytes(10).toString('hex')+'.jpg';
-      await github(user.token,'/repos/'+REPO+'/contents/'+path,{
+      await github(publishingToken(user),'/repos/'+REPO+'/contents/'+path,{
         method:'PUT',
         body:JSON.stringify({message:'Upload Prism CMS image',branch:BRANCH,content:bytes.toString('base64')})
       });
       return send(res,200,{path:path.replace(/^site\//,'')});
     }
     if(action==='publish'){
-      const remote=await currentFile(user.token);
+      const remote=await currentFile(publishingToken(user));
       if(!body.expectedSha||body.expectedSha!==remote.sha)return send(res,409,{error:'Content was modified elsewhere. Reload the CMS before publishing.'});
       if(!Array.isArray(body.items)||body.items.length>500)return send(res,400,{error:'Invalid articles list'});
       const ids=new Set(), items=[];
@@ -58,7 +67,7 @@ export default async function handler(req,res){
       }
       const output=JSON.stringify({site:remote.parsed.site,items},null,2)+'\n';
       if(Buffer.byteLength(output)>750000)return send(res,413,{error:'Publication data exceeds 750KB'});
-      const saved=await github(user.token,'/repos/'+REPO+'/contents/'+CONTENT,{
+      const saved=await github(publishingToken(user),'/repos/'+REPO+'/contents/'+CONTENT,{
         method:'PUT',
         body:JSON.stringify({message:'Publish The Prism CMS articles',sha:remote.sha,branch:BRANCH,content:Buffer.from(output).toString('base64')})
       });

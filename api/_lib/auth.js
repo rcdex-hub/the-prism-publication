@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import {staffById} from './supabase.js';
 
 export const SITE = 'https://the-prism-publication.vercel.app';
 export const REPO = 'rcdex-hub/the-prism-publication';
@@ -47,7 +48,9 @@ export function unseal(value) {
     const decipher=crypto.createDecipheriv('aes-256-gcm',key(),iv);
     decipher.setAuthTag(tag);
     const obj=JSON.parse(Buffer.concat([decipher.update(Buffer.from(parts[2],'base64url')),decipher.final()]).toString('utf8'));
-    if(!obj||typeof obj.token!=='string'||!obj.exp||obj.exp<Date.now()||!obj.user)return null;
+    if(!obj||!obj.exp||obj.exp<Date.now()||!obj.user)return null;
+    if(obj.provider==='supabase'&&typeof obj.id==='string'&&['admin','editor'].includes(obj.role))return obj;
+    if(typeof obj.token!=='string')return null;
     return obj;
   } catch {return null;}
 }
@@ -75,11 +78,19 @@ export async function github(token,path,options={}) {
 }
 export async function authorize(req) {
   const current=session(req);
-  if(!current) return null;
-  try {
+  if(!current)return null;
+  if(current.provider==='supabase'){
+    try{
+      const staff=await staffById(current.id);
+      if(staff?.active&&staff.username===current.user&&staff.role===current.role)
+        return {user:staff.username,id:staff.user_id,role:staff.role,provider:'supabase'};
+    }catch{}
+    return null;
+  }
+  try{
     const repo=await github(current.token,'/repos/'+REPO);
     if(repo.full_name?.toLowerCase()!==REPO.toLowerCase()||repo.permissions?.push!==true)return null;
-    return current;
+    return {...current,provider:'github',role:'admin'};
   }catch{return null;}
 }
 export function sameOrigin(req){
@@ -89,6 +100,6 @@ export function sameOrigin(req){
 export function isJson(req){return /^application\/json(?:;|$)/i.test(req.headers['content-type']||'');}
 export function maxAge(){return MAX_AGE;}
 export function handleError(res,e){
-  const status=e.status===409?409:e.status===401?401:e.status===403?403:e.status===422?409:e.status===413?413:500;
+  const status=e.status===409?409:e.status===401?401:e.status===403?403:e.status===422?409:e.status===413?413:e.status===503?503:500;
   send(res,status,{error:status===500?'Server operation failed. Please try again.':e.message});
 }
