@@ -15,49 +15,88 @@
 @media(max-width:360px){.brand img{height:53px;width:53px}.brand-text strong{font-size:25px}.brand-text>span{font-size:5.6px}.masthead{height:69px}.side-nav{top:69px}.home-grid{padding:6px;gap:6px}.hero-copy p{display:none}.tile-copy h3{font-size:9px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
 
-
-/* 2026-10-27 — approved continuous green-and-gold masthead.
-   Desktop artwork is an intentionally cropped banner; the existing semantic
-   home link remains available. Mobile retains live text at readable sizes. */
+/* Responsive masthead v3: typography and emblem stay as HTML elements,
+   avoiding the stretching caused by scaling a text-bearing header image. */
 @media (min-width:701px){
   .masthead{
-    background:#e7f2e9 url('images/prism-masthead.webp') center center / 100% 100% no-repeat;
-    padding:0;
-    border-bottom:2px solid #7eb29c;
-  }
-  .masthead::before,.masthead::after,.masthead .header-photo,.masthead .mast-quote{display:none}
-  .masthead .brand{
-    position:absolute;
-    inset:0 auto 0 0;
-    width:70%;
-    height:100%;
-    opacity:0;
-    display:block;
-    z-index:2;
-  }
-  .masthead:focus-within{outline:3px solid var(--gold);outline-offset:-3px}
-}
-@media (max-width:700px){
-  .masthead{
+    height:clamp(110px,15vh,155px);
+    padding:10px clamp(16px,2.8vw,45px);
+    border-top:2px solid #073f2f;
+    border-bottom:3px solid #2b8463;
     background:
-      linear-gradient(128deg,rgba(0,88,56,.25) 0 12%,rgba(241,199,76,.35) 12.2% 15%,transparent 15.2%),
-      linear-gradient(128deg,transparent 0 77%,rgba(241,199,76,.55) 77.2% 79%,transparent 79.2%),
-      linear-gradient(108deg,#cdecd9 0%,#f9fff9 38%,#e5f7ec 67%,#9bd2bb 100%);
+      linear-gradient(134deg,rgba(0,107,69,.55) 0 10%,transparent 10.2%),
+      linear-gradient(125deg,transparent 0 7.4%,rgba(243,201,75,.95) 7.5% 8.6%,transparent 8.7%),
+      linear-gradient(110deg,#0b764e 0%,#c6ecd5 18%,#f8fff9 32%,#fafdfa 62%,#c0ead4 78%,#13764f 100%);
   }
   .masthead::before{
     content:"";
+    display:block;
     position:absolute;
-    inset:0 auto 0 0;
-    width:31%;
-    background:url('images/campus-header.webp') left center/cover no-repeat;
-    opacity:.14;
-    pointer-events:none;
+    inset:0;
     z-index:0;
+    pointer-events:none;
+    background:
+      linear-gradient(126deg,transparent 0 63.3%,rgba(241,193,57,.78) 63.45% 64.5%,transparent 64.7%),
+      linear-gradient(126deg,transparent 0 69%,rgba(13,132,86,.36) 69.3% 76%,transparent 76.2%),
+      linear-gradient(37deg,rgba(0,95,64,.36) 0 10%,transparent 10.2%);
   }
-  .masthead .brand{z-index:1}
+  .masthead::after{
+    content:"";
+    display:block;
+    position:absolute;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    background:linear-gradient(126deg,transparent 0 75%,rgba(244,196,54,.9) 75.15% 76%,transparent 76.15%);
+  }
   .masthead .header-photo{
-    opacity:.20;
-    inset:0 0 0 65%;
-    clip-path:polygon(20% 0,100% 0,100% 100%,0 100%);
+    display:block;
+    position:absolute;
+    inset:0 0 0 69%;
+    opacity:1;
+    z-index:0;
+    clip-path:polygon(25% 0,100% 0,100% 100%,0 100%);
+    background:
+      linear-gradient(90deg,rgba(3,106,74,.40),rgba(0,64,45,.04) 62%),
+      url('images/campus-header.webp') center 47% /cover no-repeat;
   }
+  .masthead .brand{
+    position:relative;
+    inset:auto;
+    display:flex;
+    opacity:1;
+    height:auto;
+    width:auto;
+    max-width:76%;
+    align-items:center;
+    gap:clamp(12px,1.8vw,24px);
+    z-index:2;
+  }
+  .masthead .brand img{
+    width:clamp(78px,11vh,126px);
+    height:clamp(78px,11vh,126px);
+    object-fit:contain;
+    flex-shrink:0;
+  }
+  .masthead .brand-text strong{
+    font-size:clamp(33px,3.5vw,60px);
+    letter-spacing:-.065em;
+    line-height:1.09;
+  }
+  .masthead .brand-text>span{
+    font-size:clamp(8px,.90vw,13px);
+    letter-spacing:.21em;
+    line-height:1.55;
+  }
+  .masthead .brand-text em{
+    font-size:clamp(8px,.8vw,12px);
+    letter-spacing:.30em;
+    line-height:1.45;
+  }
+  .masthead .mast-quote{display:none}
+  .masthead:focus-within{outline:3px solid var(--gold);outline-offset:-3px}
+}
+@media (max-width:700px){
+  .masthead .brand-text strong{font-size:clamp(22px,6.5vw,33px);letter-spacing:-.06em}
+  .masthead .brand img{object-fit:contain}
 }
