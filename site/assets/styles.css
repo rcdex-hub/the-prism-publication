@@ -569,3 +569,12 @@
     padding-top:80px;
   }
 }
+
+/* v13 — Horizontally center the circular logo within the desktop left
+   navigation panel while keeping it above the Home menu entry. */
+@media (min-width:701px) {
+  .app-shell.home-top-feature > .sidebar-brandmark {
+    left:calc(var(--prism-sidebar-width) / 2);
+    transform:translateX(-50%);
+  }
+}
