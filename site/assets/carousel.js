@@ -16,7 +16,7 @@
       return '<a class="story-carousel-card" data-type="'+esc(kind)+'" href="'+href+'" aria-label="'+label+': '+title+'">'+
         '<span class="story-carousel-tag">'+label+'</span>'+
         '<span class="story-carousel-image"><img src="'+image+'" alt="'+alt+'" loading="eager"></span>'+
-        '<span class="story-carousel-copy"><strong>'+title+'</strong>'+
+        '<span class="story-carousel-copy story-carousel-overlay"><strong>'+title+'</strong>'+
         '<span class="story-carousel-link">'+action+' <span aria-hidden="true">→</span></span></span></a>';
     }
     var oneSet=articles.map(card).join('');

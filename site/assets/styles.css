@@ -1353,3 +1353,80 @@
     padding-top:78px;
   }
 }
+
+/* v33 — Photo-first story carousel with white title and link in an
+   on-hover gradient. Keyboard focus also reveals the same information. */
+.story-carousel-card{
+  position:relative;
+  display:block;
+  isolation:isolate;
+  padding:0;
+  overflow:hidden;
+  cursor:pointer;
+}
+.story-carousel-card .story-carousel-image{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  z-index:0;
+  border-radius:inherit;
+  overflow:hidden;
+}
+.story-carousel-card .story-carousel-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.story-carousel-card .story-carousel-tag{
+  position:absolute;
+  z-index:3;
+  top:10px;
+  left:10px;
+  max-width:calc(100% - 20px);
+}
+.story-carousel-card .story-carousel-overlay{
+  position:absolute;
+  inset:auto 0 0;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  min-width:0;
+  padding:36px 13px 14px;
+  background:linear-gradient(to top,rgba(0,29,24,.94) 0%,rgba(0,36,29,.72) 45%,rgba(0,41,31,0) 100%);
+  border-radius:0 0 10px 10px;
+  color:#fff;
+  opacity:0;
+  transform:translateY(10px);
+  transition:opacity .25s ease,transform .25s ease;
+  pointer-events:none;
+}
+.story-carousel-card .story-carousel-overlay strong,
+.story-carousel-card .story-carousel-overlay .story-carousel-link{
+  color:#fff;
+  text-shadow:0 1px 2px rgba(0,0,0,.45);
+}
+.story-carousel-card:hover .story-carousel-overlay,
+.story-carousel-card:focus-visible .story-carousel-overlay,
+.story-carousel-card:focus-within .story-carousel-overlay{
+  opacity:1;
+  transform:translateY(0);
+}
+.story-carousel-card:focus-visible{outline:3px solid #f2c955;outline-offset:-3px;}
+@media(max-width:700px){
+  .story-carousel-card .story-carousel-tag{top:6px;left:6px;max-width:calc(100% - 12px);}
+  .story-carousel-card .story-carousel-overlay{padding:29px 8px 8px;gap:3px;}
+}
+@media(hover:none), (pointer:coarse){
+  .story-carousel-card .story-carousel-overlay{
+    opacity:1;
+    transform:none;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .story-carousel-card .story-carousel-overlay{
+    transition:none;
+    transform:none;
+  }
+}
