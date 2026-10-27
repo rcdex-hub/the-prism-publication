@@ -17,7 +17,7 @@
   let pending = new Map(); // Temporary image uploads only. Never stores GitHub credentials.
   let busy = false;
   let connectedSha = null;
-  let signedIn = false;
+  let signedIn = true;
   const EDITOR_OWNER = 'rcdex-hub';
   const EDITOR_REPO = 'the-prism-publication';
   const EDITOR_BRANCH = 'main';
@@ -152,46 +152,24 @@
       notice('Image prepared. It will be uploaded when you publish. Keep this editor tab open until then.');
     } catch(err) {event.target.value='';notice(err.message,true);}
   }
-  function repoDetails() {
-    if (!signedIn) throw new Error('Sign in as an authorized GitHub editor first.');
-    const token = $('github-token').value.trim();
-    if (!token) throw new Error('Session expired. Sign in again to publish.');
-    return {owner:EDITOR_OWNER,repo:EDITOR_REPO,branch:EDITOR_BRANCH,token};
-  }
-  function apiUrl(details,path) {
-    const p = path.split('/').map(encodeURIComponent).join('/');
-    return `https://api.github.com/repos/${encodeURIComponent(details.owner)}/${encodeURIComponent(details.repo)}/contents/${p}`;
-  }
-  async function github(details,path,method='GET',body=null) {
-    const url = apiUrl(details,path) + (method === 'GET' ? `?ref=${encodeURIComponent(details.branch)}` : '');
-    const response = await fetch(url,{
-      method,
-      headers:{'Accept':'application/vnd.github+json','Authorization':`Bearer ${details.token}`,'X-GitHub-Api-Version':'2022-11-28',...(body ? {'Content-Type':'application/json'} : {})},
-      body: body ? JSON.stringify(body) : undefined,
-      cache:'no-store'
+  async function cmsApi(action,payload) {
+    const response=await fetch('/api/cms?action='+encodeURIComponent(action),{
+      method:payload===undefined?'GET':'POST',cache:'no-store',credentials:'same-origin',
+      headers:payload===undefined?{}:{'Content-Type':'application/json'},
+      body:payload===undefined?undefined:JSON.stringify(payload)
     });
-    const payload = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(`GitHub ${response.status}: ${payload.message || 'Request failed'}${response.status === 401 ? ' — check your token.' : ''}`);
-    return payload;
+    const data=await response.json().catch(()=>({}));
+    if(response.status===401){location.replace('/admin.html');throw new Error('Please sign in again.');}
+    if(!response.ok)throw new Error(data.error||'CMS server error ('+response.status+')');
+    return data;
   }
-  function readBase64Utf8(base64) {
-    const raw = atob(base64.replace(/\s/g,''));
-    return new TextDecoder().decode(Uint8Array.from(raw, x => x.charCodeAt(0)));
-  }
-  function base64Utf8(value) {
-    const bytes = new TextEncoder().encode(value);
-    let binary = '';
-    for (let i=0;i<bytes.length;i+=8192) binary += String.fromCharCode(...bytes.subarray(i,i+8192));
-    return btoa(binary);
-  }
-  async function checkRepo() {
-    const d = repoDetails();
-    const remote = await github(d,'site/content/articles.json');
-    connectedSha = remote.sha;
-    const parsed = JSON.parse(readBase64Utf8(remote.content));
-    if (!Array.isArray(parsed.items)) throw new Error('The repository content file has an invalid format.');
-    result(`Repository found (${d.owner}/${d.repo}, ${d.branch}).`);
-    return {d,remote,parsed};
+  async function checkRepo(){
+    const remote=await cmsApi('content');
+    connectedSha=remote.sha;
+    const parsed=remote.data;
+    if(!Array.isArray(parsed?.items))throw new Error('Invalid remote articles');
+    result('Publishing permissions verified by the server.');
+    return {remote,parsed};
   }
   function setBusy(value) {
     busy = value;
@@ -206,56 +184,43 @@
     catch(err) {result(err.message,true);notice(err.message,true);}
     finally {setBusy(false);}
   }
-  async function publish() {
-    if (busy) return;
-    if (!confirm('Publish all saved local changes to GitHub? Published entries will appear after Vercel deploys.')) return;
-    setBusy(true);result('Checking repository…');
-    try {
-      // Capture current editor form changes only after Save local draft was used.
-      const {d,remote,parsed} = await checkRepo();
-      if (JSON.stringify(parsed.items) !== JSON.stringify(original.items)) {
-        throw new Error('GitHub content changed since this editor loaded. Reload the editor before publishing to avoid overwriting another editor’s work.');
+  async function publish(){
+    if(busy)return;
+    if(!confirm('Publish approved articles? Unpublished drafts remain on this device.'))return;
+    setBusy(true);result('Checking published content…');
+    try{
+      const {remote,parsed}=await checkRepo();
+      if(JSON.stringify(parsed.items)!==JSON.stringify(original.items))
+        throw new Error('Website articles changed elsewhere. Reload and reconcile your edits before publishing.');
+      const outgoing=clone(items);
+      const published=outgoing.filter(i=>i.status==='published');
+      const drafts=outgoing.filter(i=>i.status!=='published');
+      for(const item of published){
+        if(!item.id||!item.title?.trim()||!item.author?.trim()||!item.date||!item.excerpt?.trim()||!Array.isArray(item.body)||!item.body.length)
+          throw new Error('Complete this article before publishing: '+(item.title||item.id||'Untitled'));
+        const staged=pending.get(item.id);
+        if(staged){result('Uploading photo for '+item.title+'…'); const uploaded=await cmsApi('upload',{id:item.id,dataUrl:staged.dataUrl});item.image=uploaded.path;}
       }
-      const outgoing = clone(items);
-      for (const item of outgoing) {
-        if (!item.id || !item.title?.trim() || !item.author?.trim() || !item.date || !item.excerpt?.trim() || !Array.isArray(item.body) || !item.body.length) {
-          throw new Error('Complete and save every entry, including new drafts, before publishing. Missing details: '+(item.title||item.id||'Untitled'));
-        }
-      }
-      for (const item of outgoing) {
-        const staged = pending.get(item.id);
-        if (!staged) continue;
-        result(`Uploading image for ${item.title || 'untitled entry'}…`);
-        const basename = String(item.id).toLowerCase().replace(/[^a-z0-9-]/g,'-').slice(0,45) || 'new-image';
-        const filename = `site/assets/images/uploads/${basename}-${Date.now()}.jpg`;
-        await github(d, filename, 'PUT', {
-          message:`Add The Prism image: ${item.title || 'New image'}`,
-          content:staged.dataUrl.split(',')[1], branch:d.branch
-        });
-        item.image = filename.replace(/^site\//,''); // public path is relative to Vercel outputDirectory=site
-      }
-      result('Saving publication content to GitHub…');
-      const outgoingData = {...original, items:outgoing};
-      await github(d,'site/content/articles.json','PUT',{
-        message:'Publish The Prism editorial updates',
-        content:base64Utf8(JSON.stringify(outgoingData,null,2)+'\n'),
-        sha:remote.sha,branch:d.branch
-      });
-      original=clone(outgoingData);items=clone(outgoing);pending.clear();localStorage.removeItem(DRAFT_KEY);connectedSha=null;
-      render();if(selectedId)selectItem(selectedId);
-      result('Published successfully! Vercel will deploy the new content.');
-      notice('GitHub accepted your changes. Check the Vercel deployment; once Ready, the public website will show the updated articles.');
-    } catch(err) {
-      result(err.message,true);
-      notice('Publish failed: '+err.message,true);
-    } finally {setBusy(false);}
+      result('Publishing approved articles…');
+      await cmsApi('publish',{items:published,expectedSha:remote.sha});
+      original={...parsed,items:published};
+      items=[...drafts,...published];pending.clear();connectedSha=null;
+      if(drafts.length)persist();else localStorage.removeItem(DRAFT_KEY);
+      render();if(items.find(i=>i.id===selectedId))selectItem(selectedId);
+      result('Published to GitHub. Vercel will deploy the website.');
+      notice('Published entries were updated. Unpublished browser drafts remain local on this device.');
+    }catch(error){result(error.message,true);notice('Publish failed: '+error.message,true);}
+    finally{setBusy(false);}
   }
   async function start() {
     if (!signedIn) return;
     try {
-      const response = await fetch('content/articles.json',{cache:'no-store'});
-      if(!response.ok)throw new Error(`Could not load publication JSON (${response.status})`);
-      original=await response.json();
+      const response=await fetch('/api/auth?action=session',{cache:'no-store',credentials:'same-origin'});
+      if(!response.ok){location.replace('/admin.html');return;}
+      const identity=await response.json();
+      $('cms-editor-identity').textContent='Verified GitHub editor: @'+identity.user;
+      const remote=await cmsApi('content');
+      original=remote.data;
       if(!Array.isArray(original.items))throw new Error('Publication data is invalid.');
       items=clone(original.items);
       const stored=localStorage.getItem(DRAFT_KEY);
@@ -310,57 +275,11 @@
   $('test-github').addEventListener('click',testRepo);
   $('publish-github').addEventListener('click',publish);
 
-  async function signIn(event) {
-    event.preventDefault();
-    const token=$('cms-access-token').value.trim();
-    const button=$('cms-access-submit');
-    if (!token) return;
-    button.disabled=true;button.textContent='Checking GitHub permissions…';
-    $('cms-access-error').hidden=true;
-    try {
-      const headers={
-        Accept:'application/vnd.github+json',
-        Authorization:'Bearer '+token,
-        'X-GitHub-Api-Version':'2022-11-28'
-      };
-      const [identityResponse,repoResponse]=await Promise.all([
-        fetch('https://api.github.com/user',{headers,cache:'no-store'}),
-        fetch('https://api.github.com/repos/'+EDITOR_OWNER+'/'+EDITOR_REPO,{headers,cache:'no-store'})
-      ]);
-      if(!identityResponse.ok||!repoResponse.ok) {
-        throw new Error('GitHub could not verify this token. Check that it is active and permitted for The Prism repository.');
-      }
-      const [identity,repository]=await Promise.all([identityResponse.json(),repoResponse.json()]);
-      if(!identity.login||repository.full_name?.toLowerCase()!==(EDITOR_OWNER+'/'+EDITOR_REPO).toLowerCase()||repository.permissions?.push!==true){
-        throw new Error('This GitHub account does not have write access to The Prism repository.');
-      }
-      // This is an in-memory client gate, not a server-side session.
-      signedIn=true;
-      $('github-token').value=token;
-      $('cms-access-token').value='';
-      $('cms-editor-identity').textContent='Verified GitHub editor: @'+identity.login;
-      $('cms-workspace').hidden=false;
-      $('cms-access').hidden=true;
-      await start();
-    }catch(error){
-      signedIn=false;
-      $('github-token').value='';
-      const message=error instanceof TypeError?'Cannot connect to GitHub. Check your internet connection and try again.':error.message;
-      $('cms-access-error').textContent=message;
-      $('cms-access-error').hidden=false;
-    }finally{button.disabled=false;button.textContent='Verify access & open dashboard';}
+  async function signOut(){
+    if(pending.size&&!confirm('Unpublished photo selections will be lost. Saved local drafts remain on this device. Sign out?'))return;
+    try{await fetch('/api/auth?action=logout',{method:'POST',credentials:'same-origin',cache:'no-store',headers:{'Content-Type':'application/json'},body:'{}'});}
+    finally{location.replace('/admin.html');}
   }
-  function signOut(){
-    if (pending.size && !confirm('Unpublished photo uploads will be lost when you sign out. Browser text drafts stay saved. Sign out?')) return;
-    signedIn=false;connectedSha=null;pending.clear();
-    $('github-token').value='';
-    $('cms-access-token').value='';
-    $('cms-workspace').hidden=true;
-    $('cms-access').hidden=false;
-    $('cms-editor-identity').textContent='';
-    $('cms-access-error').hidden=true;
-    window.scrollTo({top:0,behavior:'instant'});
-  }
-  $('cms-access-form').addEventListener('submit',signIn);
   $('cms-sign-out').addEventListener('click',signOut);
+  start();
 })();
