@@ -419,3 +419,60 @@
   .app-shell.home-top-feature .masthead .brand-text>span {font-size:5px;}
   .app-shell.home-top-feature .masthead .brand-text em {font-size:5px;}
 }
+
+/* v10 — place the emblem in the upper-left menu column, keep white
+   publication lettering right-aligned in the upper-right news header. */
+.sidebar-brandmark{display:none;}
+.app-shell.home-top-feature {position:relative;}
+.app-shell.home-top-feature > .sidebar-brandmark{
+  position:absolute;top:12px;left:clamp(11px,1.4vw,20px);
+  z-index:30;display:grid;place-items:center;
+  width:clamp(100px,9vw,130px);height:94px;
+  padding:9px;border-radius:12px;
+  background:#0b5144;
+  border:1px solid rgba(255,255,255,.11);
+  text-decoration:none;
+}
+.app-shell.home-top-feature > .sidebar-brandmark img{
+  display:block;width:76px;height:76px;object-fit:contain;
+}
+.app-shell.home-top-feature > .sidebar-brandmark:focus-visible{
+  outline:3px solid #e9c458;outline-offset:2px;
+}
+.app-shell.home-top-feature .masthead .brand img{display:none!important;}
+.app-shell.home-top-feature .masthead .brand{gap:0;}
+@media (min-width:701px) and (max-width:950px){
+  .app-shell.home-top-feature > .sidebar-brandmark{
+    top:10px;left:10px;width:104px;height:82px;
+  }
+  .app-shell.home-top-feature > .sidebar-brandmark img{width:64px;height:64px;}
+}
+@media(max-width:700px){
+  .app-shell.home-top-feature > .sidebar-brandmark{
+    top:8px;left:6px;width:51px;height:51px;padding:5px;border-radius:9px;
+  }
+  .app-shell.home-top-feature > .sidebar-brandmark img{width:40px;height:40px;}
+  .app-shell.home-top-feature .masthead .brand{
+    max-width:calc(100% - 100px);
+    padding:6px 8px;margin-left:auto;
+  }
+  .app-shell.home-top-feature .masthead .brand-text{
+    max-width:100%;
+  }
+  .app-shell.home-top-feature .masthead .brand-text>span{
+    white-space:normal;line-height:1.18;
+  }
+  .app-shell.home-top-feature .masthead .menu-toggle{
+    left:61px;top:7px;right:auto;
+  }
+}
+@media(max-width:360px){
+  .app-shell.home-top-feature > .sidebar-brandmark{
+    width:47px;height:47px;left:5px;top:7px;
+  }
+  .app-shell.home-top-feature > .sidebar-brandmark img{width:36px;height:36px;}
+  .app-shell.home-top-feature .masthead .brand{
+    max-width:calc(100% - 95px);
+  }
+  .app-shell.home-top-feature .masthead .menu-toggle{left:55px;}
+}
