@@ -992,3 +992,40 @@
   .side-nav nav{gap:9px;}
   .side-nav nav a{min-height:44px;padding:9px 13px;}
 }
+
+/* v24 — A tighter four-page menu without changing the logo or homepage. */
+@media (min-width:701px){
+  .side-nav nav{
+    gap:3px;
+  }
+  .side-nav nav a{
+    min-height:34px;
+    height:34px;
+    padding:5px 11px;
+    border-radius:7px;
+    gap:10px;
+  }
+  .side-nav nav a > span{
+    font-size:18px;
+    width:22px;
+  }
+}
+@media (min-width:701px) and (max-width:950px){
+  .side-nav nav{gap:3px;}
+  .side-nav nav a{
+    min-height:34px;
+    height:34px;
+    padding:5px 8px;
+    gap:7px;
+  }
+}
+@media (max-width:700px){
+  .side-nav nav{gap:4px;}
+  .side-nav nav a{
+    min-height:40px;
+    height:40px;
+    padding:7px 11px;
+    border-radius:7px;
+    gap:10px;
+  }
+}
