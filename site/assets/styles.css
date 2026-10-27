@@ -274,3 +274,29 @@
   .app-shell.home-top-feature #featured-header h1{font-size:19px}
   .app-shell.home-top-feature #featured-header .hero-copy p{display:none}
 }
+
+/* v8 — Keep featured news within the content column, never over the sidebar. */
+@media (min-width:701px) {
+  .app-shell.home-top-feature {
+    --prism-sidebar-width:clamp(170px,13vw,205px);
+    background:#003f31;
+  }
+  .app-shell.home-top-feature > #featured-header {
+    width:calc(100% - var(--prism-sidebar-width));
+    margin-left:var(--prism-sidebar-width);
+    align-self:flex-start;
+    border-radius:0 0 12px 12px;
+  }
+}
+@media (min-width:701px) and (max-width:1200px) {
+  .app-shell.home-top-feature { --prism-sidebar-width:170px; }
+}
+@media (min-width:701px) and (max-width:950px) {
+  .app-shell.home-top-feature { --prism-sidebar-width:148px; }
+}
+@media (max-width:700px) {
+  /* Mobile has a hidden navigation drawer, not a permanent sidebar. */
+  .app-shell.home-top-feature > #featured-header {
+    width:100%;margin-left:0;
+  }
+}
