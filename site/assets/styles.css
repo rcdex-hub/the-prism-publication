@@ -807,7 +807,7 @@
 .story-carousel-actions button:hover,.story-carousel-actions button:focus-visible{color:white;background:#087a51;}
 .story-carousel-viewport{flex:1;min-height:0;width:100%;overflow:hidden;border-radius:11px;touch-action:pan-y;}
 .story-carousel-track{height:100%;display:flex;gap:var(--story-gap);will-change:transform;transform:translate3d(0,0,0);}
-.story-carousel-card{flex:0 0 calc((100% - (var(--story-visible) - 1)*var(--story-gap))/var(--story-visible));min-width:0;min-height:0;height:100%;display:flex;flex-direction:column;gap:5px;padding:9px;background:#fff;border:1px solid #e3ece7;border-radius:11px;overflow:hidden;color:#162c22;box-shadow:0 2px 14px rgba(0,40,27,.065);transition:box-shadow .22s,border-color .22s,background .22s;}
+.story-carousel-card{flex:0 0 calc((100% - 24px)/3);min-width:0;min-height:0;height:100%;display:flex;flex-direction:column;gap:5px;padding:9px;background:#fff;border:1px solid #e3ece7;border-radius:11px;overflow:hidden;color:#162c22;box-shadow:0 2px 14px rgba(0,40,27,.065);transition:box-shadow .22s,border-color .22s,background .22s;}
 .story-carousel-card:hover,.story-carousel-card:focus-visible{border-color:#0c976b;background:#fbfffc;box-shadow:0 6px 20px rgba(0,60,40,.16);}
 .story-carousel-tag{align-self:flex-start;max-width:100%;border-radius:5px;background:#006e4c;color:#fff;font-size:clamp(9px,.78vw,12px);font-weight:800;line-height:1.2;padding:5px 9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;}
 .story-carousel-image{flex:1 1 auto;min-height:0;display:block;overflow:hidden;border-radius:7px;background:#e9f1ed;}
@@ -818,14 +818,14 @@
 .story-carousel-copy strong{font-size:clamp(11px,1.15vw,17px);font-weight:800;line-height:1.2;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .story-carousel-link{font-size:clamp(10px,.78vw,12px);font-weight:700;color:#006c49;}
 .story-carousel-link span{font-size:16px;margin-left:4px;}
-@media (max-width:950px) and (min-width:701px){.story-carousel{--story-visible:2;--story-gap:9px;}}
+@media (max-width:950px) and (min-width:701px){.story-carousel{--story-visible:2;--story-gap:9px;}.story-carousel-card{flex-basis:calc((100% - 9px)/2);}}
 @media (max-width:700px){
  .app-shell.home-top-feature .home-grid{padding:7px;}
  .story-carousel{--story-visible:1;--story-gap:8px;gap:4px;}
  .story-carousel-toolbar{flex-basis:26px;padding:0 2px;}
  .story-carousel-heading{font-size:9px;}
  .story-carousel-actions button{width:26px;height:25px;}
- .story-carousel-card{padding:6px;gap:4px;border-radius:8px;}
+ .story-carousel-card{flex-basis:100%;padding:6px;gap:4px;border-radius:8px;}
  .story-carousel-tag{font-size:9px;padding:4px 7px;}
  .story-carousel-copy strong{font-size:clamp(11px,3.2vw,15px);}
  .story-carousel-link{font-size:10px;}
