@@ -1,4 +1,4 @@
-/* The Prism — accessible rotating editorial and sports highlights. */
+/* The Prism — accessible rotating highlights from all published News, Editorial and Sports entries. */
 (function () {
   'use strict';
   function mount(root, articles, helpers) {
@@ -12,7 +12,7 @@
       var title=esc(item.title);
       var alt=esc(item.imageAlt||item.title);
       var href=pathTo(item);
-      var action=kind==='cartoon'?'Read cartoon':kind==='sports'?'Read sports news':'Read editorial';
+      var action=kind==='cartoon'?'Read cartoon':kind==='sports'?'Read sports news':kind==='editorial'?'Read editorial':kind==='feature'?'Read feature':'Read news';
       return '<a class="story-carousel-card" data-type="'+esc(kind)+'" href="'+href+'" aria-label="'+label+': '+title+'">'+
         '<span class="story-carousel-tag">'+label+'</span>'+
         '<span class="story-carousel-image"><img src="'+image+'" alt="'+alt+'" loading="eager"></span>'+
@@ -20,8 +20,8 @@
         '<span class="story-carousel-link">'+action+' <span aria-hidden="true">→</span></span></span></a>';
     }
     var oneSet=articles.map(card).join('');
-    root.innerHTML='<section class="story-carousel" role="region" aria-roledescription="carousel" aria-label="Editorial cartooning, editorial and sports news">'+
-      '<div class="story-carousel-toolbar"><span class="story-carousel-heading">EDITORIAL &amp; SPORTS HIGHLIGHTS</span>'+
+    root.innerHTML='<section class="story-carousel" role="region" aria-roledescription="carousel" aria-label="Published articles from News, Editorial and Sports">'+
+      '<div class="story-carousel-toolbar"><span class="story-carousel-heading">NEWS, EDITORIAL &amp; SPORTS <small class="story-carousel-total">'+count+' ARTICLES</small></span>'+
       '<div class="story-carousel-actions">'+
       '<button type="button" data-story-prev aria-label="Previous stories" title="Previous stories">‹</button>'+
       '<button type="button" data-story-pause aria-label="Pause rotating stories" title="Pause rotating stories">Ⅱ</button>'+

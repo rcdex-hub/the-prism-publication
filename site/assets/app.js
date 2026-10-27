@@ -22,7 +22,7 @@
   function sectionHead(name,url){return `<div class="section-head"><h2>${esc(name)}</h2>${url?`<a href="index.html?page=${url}" aria-label="View all ${esc(name)}">View all <span aria-hidden="true">→</span></a>`:''}</div>`;}
   function home(){
     const heroList=[find('news'),find('feature'),find('sports')].filter(Boolean);
-    const cartoon=find('cartoon'),opinion=find('editorial'),sports=find('sports');
+    const carouselArticles=entries.filter(i=>['news','feature','editorial','cartoon','sports'].includes(i.type));
     const featureSlide=i=>`<div class="hero-slide"><img src="${validImage(i.image)}" alt="${esc(i.imageAlt||i.title)}" fetchpriority="high"><div class="hero-overlay"></div><div class="hero-copy"><span class="ribbon">${esc(category[i.type]||i.type.toUpperCase())}</span><h1>${esc(i.title)}</h1><p>${esc(i.excerpt)}</p><a class="read-btn" href="${pathTo(i)}">Read More <span>→</span></a></div></div>`;
     const featured=document.getElementById('featured-header');
     featured.innerHTML=`${heroList.map((i,n)=>`<div class="hero-pane ${n?'':'shown'}" data-slide="${n}">${featureSlide(i)}</div>`).join('')}<div class="hero-controls" aria-label="Featured story carousel"><div class="dots">${heroList.map((_,n)=>`<button class="dot ${n?'':'active'}" data-dot="${n}" aria-label="Featured story ${n+1}" aria-pressed="${!n}"></button>`).join('')}</div></div>`;
@@ -49,7 +49,7 @@
     </aside>`:'';
     app.innerHTML=`<div class="home-grid ${gallery?'with-gallery':''}"><div id="secondary-carousel-root" class="story-carousel-root"></div>${galleryPanel}</div>`;
     if(window.PrismCarousel) {
-      window.PrismCarousel.mount(document.getElementById('secondary-carousel-root'),[cartoon,opinion,sports].filter(Boolean),{
+      window.PrismCarousel.mount(document.getElementById('secondary-carousel-root'),carouselArticles,{
         esc:esc,validImage:validImage,pathTo:pathTo,category:category
       });
     }
