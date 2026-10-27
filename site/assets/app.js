@@ -25,7 +25,7 @@
     const cartoon=find('cartoon'),opinion=find('editorial'),sports=find('sports');
     const featureSlide=i=>`<div class="hero-slide"><img src="${validImage(i.image)}" alt="${esc(i.imageAlt||i.title)}" fetchpriority="high"><div class="hero-overlay"></div><div class="hero-copy"><span class="ribbon">${esc(category[i.type]||i.type.toUpperCase())}</span><h1>${esc(i.title)}</h1><p>${esc(i.excerpt)}</p><a class="read-btn" href="${pathTo(i)}">Read More <span>→</span></a></div></div>`;
     const featured=document.getElementById('featured-header');
-    featured.innerHTML=`${heroList.map((i,n)=>`<div class="hero-pane ${n?'':'shown'}" data-slide="${n}">${featureSlide(i)}</div>`).join('')}<div class="hero-controls" aria-label="Featured story carousel"><div class="dots">${heroList.map((_,n)=>`<button class="dot ${n?'':'active'}" data-dot="${n}" aria-label="Featured story ${n+1}" aria-pressed="${!n}"></button>`).join('')}</div><button id="prev-slide" aria-label="Previous featured story">‹</button><button id="next-slide" aria-label="Next featured story">›</button></div>`;
+    featured.innerHTML=`${heroList.map((i,n)=>`<div class="hero-pane ${n?'':'shown'}" data-slide="${n}">${featureSlide(i)}</div>`).join('')}<div class="hero-controls" aria-label="Featured story carousel"><div class="dots">${heroList.map((_,n)=>`<button class="dot ${n?'':'active'}" data-dot="${n}" aria-label="Featured story ${n+1}" aria-pressed="${!n}"></button>`).join('')}</div></div>`;
     featured.hidden=false;
     document.querySelector('.app-shell')?.classList.add('home-top-feature');
     // Published CMS articles provide a click-through, auto-scrolling headline strip.
@@ -58,21 +58,7 @@
     let userPaused=reducedMotion.matches;
     let hoverPaused=featured.matches(':hover');
     let focusPaused=featured.contains(document.activeElement);
-    const controls=featured.querySelector('.hero-controls');
-    const rotationButton=heroList.length>1?document.createElement('button'):null;
-    if(rotationButton){
-      rotationButton.type='button';
-      rotationButton.id='toggle-slideshow';
-      controls.append(rotationButton);
-    }
     featured.setAttribute('aria-live','off');
-    const updateRotationButton=()=>{
-      if(!rotationButton)return;
-      const label=userPaused?'Play automatic slideshow':'Pause automatic slideshow';
-      rotationButton.textContent=userPaused?'▶':'Ⅱ';
-      rotationButton.setAttribute('aria-label',label);
-      rotationButton.title=label;
-    };
     const stopRotation=()=>{window.clearTimeout(rotationTimer);rotationTimer=null;};
     const scheduleRotation=()=>{
       stopRotation();
@@ -97,15 +83,7 @@
       });
     };
     const navigate=x=>{showSlide(x);scheduleRotation();};
-    featured.querySelector('#prev-slide')?.addEventListener('click',()=>navigate(slide-1));
-    featured.querySelector('#next-slide')?.addEventListener('click',()=>navigate(slide+1));
     featured.querySelectorAll('[data-dot]').forEach(button=>button.addEventListener('click',()=>navigate(Number(button.dataset.dot))));
-    rotationButton?.addEventListener('click',()=>{
-      userPaused=!userPaused;
-      focusPaused=false;
-      updateRotationButton();
-      scheduleRotation();
-    });
     featured.addEventListener('mouseenter',()=>{hoverPaused=true;stopRotation();});
     featured.addEventListener('mouseleave',()=>{hoverPaused=false;scheduleRotation();});
     featured.addEventListener('focusin',()=>{focusPaused=true;stopRotation();});
@@ -116,10 +94,9 @@
     window.addEventListener('pagehide',stopRotation);
     window.addEventListener('pageshow',scheduleRotation);
     reducedMotion.addEventListener('change',event=>{
-      if(event.matches){userPaused=true;updateRotationButton();scheduleRotation();}
+      if(event.matches){userPaused=true;scheduleRotation();}
     });
     showSlide(0);
-    updateRotationButton();
     scheduleRotation();
   }
   function listing(section){

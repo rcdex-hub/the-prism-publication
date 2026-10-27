@@ -1095,3 +1095,6 @@
  .home-gallery-thumb span{padding-top:7px;font-size:8px;}
 }
 @media(prefers-reduced-motion:reduce){.home-gallery-thumb img{transition:none!important;}}
+/* v26 — Only the unobtrusive slide-position dots remain on the main hero.
+   Editorial-card carousel controls are intentionally unaffected. */
+.app-shell.home-top-feature #featured-header .dots { margin-right:0; }
