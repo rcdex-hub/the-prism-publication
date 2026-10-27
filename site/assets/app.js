@@ -37,7 +37,17 @@
       ticker.innerHTML='<span class="ticker-label">LATEST HEADLINES</span><div class="ticker-viewport"><div class="ticker-motion"><div class="ticker-set">'+oneSet+'</div><div class="ticker-set" aria-hidden="true" inert>'+oneSet+'</div></div></div>';
       ticker.hidden=false;
     }
-    app.innerHTML='<div class="home-grid"><div id="secondary-carousel-root" class="story-carousel-root"></div></div>';
+    const gallery=find('gallery');
+    const galleryPhotos=[
+      {src:'assets/images/gallery-treeplanting.webp',title:'Campus Greening'},
+      {src:'assets/images/gallery-event.webp',title:'School Activities'},
+      {src:'assets/images/gallery-community.webp',title:'Community Engagement'}
+    ];
+    const galleryPanel=gallery?`<aside class="home-gallery-panel" aria-label="Photo gallery">
+      <div class="home-gallery-heading"><h2>PHOTO GALLERY</h2><a href="${pathTo(gallery)}" aria-label="View photo gallery story">View story <span aria-hidden="true">→</span></a></div>
+      <div class="home-gallery-stack">${galleryPhotos.map(photo=>`<a class="home-gallery-thumb" href="${pathTo(gallery)}" aria-label="View ${esc(photo.title)} in photo gallery"><img src="${validImage(photo.src)}" alt="${esc(photo.title)} photo gallery preview" loading="lazy"><span>${esc(photo.title)}</span></a>`).join('')}</div>
+    </aside>`:'';
+    app.innerHTML=`<div class="home-grid ${gallery?'with-gallery':''}"><div id="secondary-carousel-root" class="story-carousel-root"></div>${galleryPanel}</div>`;
     if(window.PrismCarousel) {
       window.PrismCarousel.mount(document.getElementById('secondary-carousel-root'),[cartoon,opinion,sports].filter(Boolean),{
         esc:esc,validImage:validImage,pathTo:pathTo,category:category
