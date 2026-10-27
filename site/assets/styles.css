@@ -699,3 +699,34 @@
       rgba(0,64,46,0) 96%);
   }
 }
+
+/* v16 — Approved THE PRISM golden faceted wordmark.
+   THE appears in small white type beside the top edge of golden PRISM.
+   Wordmark extracted with transparency so the live campus carousel remains visible. */
+.app-shell.home-top-feature .masthead .brand-text strong{
+  display:block;
+  width:clamp(276px,31.5vw,466px);
+  height:auto;
+  aspect-ratio:1509 / 309;
+  background:url('images/prism-wordmark-gold.webp') right center / contain no-repeat;
+  font-size:0!important;
+  line-height:0!important;
+  text-shadow:none!important;
+  color:transparent!important;
+  flex-shrink:0;
+}
+@media (min-width:701px) and (max-width:1000px){
+  .app-shell.home-top-feature .masthead .brand-text strong{
+    width:clamp(235px,30vw,320px);
+  }
+}
+@media(max-width:700px){
+  .app-shell.home-top-feature .masthead .brand-text strong{
+    width:clamp(147px,46vw,235px);
+  }
+}
+@media(max-width:360px){
+  .app-shell.home-top-feature .masthead .brand-text strong{
+    width:clamp(140px,43vw,162px);
+  }
+}
