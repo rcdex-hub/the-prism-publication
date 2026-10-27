@@ -300,3 +300,122 @@
     width:100%;margin-left:0;
   }
 }
+
+
+/* v9 — position The Prism branding over the upper-right of the featured header. */
+.app-shell.home-top-feature .masthead {
+  position:absolute;
+  top:14px;
+  right:clamp(14px,2vw,32px);
+  left:auto;
+  width:auto;
+  height:auto;
+  min-height:0;
+  padding:0;
+  margin:0;
+  border:0;
+  background:transparent;
+  overflow:visible;
+  display:flex;
+  justify-content:flex-end;
+  align-items:flex-start;
+  z-index:26;
+}
+.app-shell.home-top-feature .masthead::before,
+.app-shell.home-top-feature .masthead::after,
+.app-shell.home-top-feature .masthead .header-photo,
+.app-shell.home-top-feature .masthead .mast-quote {display:none!important;}
+.app-shell.home-top-feature .masthead .brand {
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  flex-direction:row;
+  gap:11px;
+  width:auto;
+  max-width:100%;
+  padding:9px 13px;
+  border-radius:10px;
+  background:rgba(0,42,30,.82);
+  box-shadow:0 3px 18px rgba(0,18,12,.16);
+  opacity:1;
+}
+.app-shell.home-top-feature .masthead .brand img {
+  width:58px;height:58px;min-width:58px;
+  object-fit:contain;flex-shrink:0;
+  border-radius:50%;
+  background:none;box-shadow:none;
+}
+.app-shell.home-top-feature .masthead .brand-text {
+  align-items:flex-end;
+  text-align:right;
+  white-space:nowrap;
+}
+.app-shell.home-top-feature .masthead .brand-text strong {
+  font-size:clamp(25px,2.65vw,37px);
+  line-height:1;
+  letter-spacing:-.055em;
+  font-weight:900;
+  color:#fff;
+}
+.app-shell.home-top-feature .masthead .brand-text>span {
+  font-size:clamp(7px,.7vw,10px);
+  letter-spacing:.18em;
+  font-weight:600;
+  margin-top:5px;
+  color:#fff;
+  line-height:1.35;
+}
+.app-shell.home-top-feature .masthead .brand-text em {
+  font-size:clamp(7px,.65vw,9px);
+  letter-spacing:.22em;
+  font-weight:500;
+  margin-top:1px;
+  color:#fff;
+  line-height:1.35;
+}
+@media (min-width:701px) and (max-width:900px) {
+  .app-shell.home-top-feature .masthead {top:10px;right:12px;}
+  .app-shell.home-top-feature .masthead .brand{padding:7px 10px;gap:8px;}
+  .app-shell.home-top-feature .masthead .brand img{width:48px;height:48px;min-width:48px;}
+  .app-shell.home-top-feature .masthead .brand-text strong{font-size:27px;}
+  .app-shell.home-top-feature .masthead .brand-text>span{font-size:7px;letter-spacing:.11em;}
+  .app-shell.home-top-feature .masthead .brand-text em{font-size:7px;letter-spacing:.15em;}
+}
+@media (max-width:700px) {
+  .app-shell.home-top-feature .masthead {
+    top:8px;right:8px;left:auto;
+    width:calc(100% - 16px);
+    height:auto;min-height:0;
+    background:transparent;
+    justify-content:flex-end;
+    padding:0;
+    z-index:26;
+  }
+  .app-shell.home-top-feature .masthead .brand {
+    max-width:calc(100% - 46px);
+    margin-left:auto;
+    gap:7px;
+    padding:6px 8px;
+    border-radius:8px;
+  }
+  .app-shell.home-top-feature .masthead .brand img {
+    width:40px;height:40px;min-width:40px;
+  }
+  .app-shell.home-top-feature .masthead .brand-text strong {font-size:clamp(17px,5vw,23px);}
+  .app-shell.home-top-feature .masthead .brand-text>span {font-size:clamp(5px,1.4vw,6.5px);letter-spacing:.07em;margin-top:2px;}
+  .app-shell.home-top-feature .masthead .brand-text em {font-size:clamp(5px,1.3vw,6px);letter-spacing:.11em;}
+  .app-shell.home-top-feature .masthead .menu-toggle {
+    position:absolute;
+    left:0;
+    right:auto;
+    top:5px;
+    z-index:28;
+  }
+}
+@media (max-width:360px) {
+  .app-shell.home-top-feature .masthead .brand {gap:5px;padding:5px 7px;max-width:calc(100% - 42px);}
+  .app-shell.home-top-feature .masthead .brand img {width:35px;height:35px;min-width:35px;}
+  .app-shell.home-top-feature .masthead .brand-text strong {font-size:17px;}
+  .app-shell.home-top-feature .masthead .brand-text>span {font-size:5px;}
+  .app-shell.home-top-feature .masthead .brand-text em {font-size:5px;}
+}
