@@ -517,3 +517,55 @@
     width:53px;height:53px;padding:0;
   }
 }
+
+/* v12 — Home menu starts immediately below the emblem, not below the
+   featured-news carousel. Desktop column and article content remain separate. */
+@media (min-width:701px) {
+  .app-shell.home-top-feature {
+    --prism-sidebar-width:clamp(170px,13vw,205px);
+  }
+  .app-shell.home-top-feature .page-layout{
+    grid-template-columns:var(--prism-sidebar-width) minmax(0,1fr);
+  }
+  .app-shell.home-top-feature .page-layout > #side-nav{
+    position:absolute;
+    top:116px;
+    bottom:0;
+    left:0;
+    width:var(--prism-sidebar-width);
+    min-height:0;
+    z-index:18;
+    padding:8px 12px 18px;
+    background:#003f31;
+  }
+  .app-shell.home-top-feature .page-layout > #side-nav nav{
+    max-height:560px;
+    min-height:0;
+  }
+  .app-shell.home-top-feature .page-layout > #app{
+    grid-column:2;
+    grid-row:1;
+  }
+}
+@media (min-width:701px) and (max-width:1200px){
+  .app-shell.home-top-feature{--prism-sidebar-width:170px;}
+}
+@media (min-width:701px) and (max-width:950px){
+  .app-shell.home-top-feature{--prism-sidebar-width:148px;}
+  .app-shell.home-top-feature .page-layout > #side-nav{
+    top:104px;
+    padding:7px 8px 12px;
+  }
+}
+@media (max-width:700px){
+  /* Keep the mobile drawer below the emblem when opened. */
+  .app-shell.home-top-feature .page-layout > #side-nav{
+    top:0;
+    padding-top:86px;
+  }
+}
+@media (max-width:360px){
+  .app-shell.home-top-feature .page-layout > #side-nav{
+    padding-top:80px;
+  }
+}
