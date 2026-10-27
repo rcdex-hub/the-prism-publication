@@ -649,3 +649,53 @@
     max-width:calc(100% - 103px);
   }
 }
+
+/* v15 — Keep the news text and controls above the green corner gradient.
+   Render gradient inside each slide, between the photo and its text,
+   instead of above the entire featured banner. */
+.app-shell.home-top-feature > #featured-header::before{
+  display:none;
+}
+.app-shell.home-top-feature #featured-header .hero-slide::after{
+  content:"";
+  position:absolute;
+  top:0;
+  right:0;
+  width:min(83%,1050px);
+  height:clamp(180px,90%,390px);
+  background:radial-gradient(ellipse at 100% 0%,
+    rgba(0,60,43,.72) 0%,
+    rgba(0,64,47,.48) 33%,
+    rgba(0,65,46,.19) 61%,
+    rgba(0,65,46,0) 85%);
+  z-index:2;
+  pointer-events:none;
+}
+.app-shell.home-top-feature #featured-header .hero-slide > .hero-overlay {
+  z-index:1;
+  pointer-events:none;
+}
+.app-shell.home-top-feature #featured-header .hero-slide > .hero-copy {
+  position:absolute;
+  z-index:3;
+  color:#fff;
+}
+.app-shell.home-top-feature #featured-header .hero-copy h1,
+.app-shell.home-top-feature #featured-header .hero-copy p{
+  color:#fff;
+  opacity:1;
+}
+.app-shell.home-top-feature #featured-header .hero-controls {
+  z-index:6;
+}
+@media(max-width:700px){
+  .app-shell.home-top-feature #featured-header .hero-slide::after{
+    width:95%;
+    height:clamp(135px,57%,230px);
+    background:radial-gradient(ellipse at 100% 0%,
+      rgba(0,60,43,.78) 0%,
+      rgba(0,64,46,.48) 41%,
+      rgba(0,64,46,.12) 74%,
+      rgba(0,64,46,0) 96%);
+  }
+}
