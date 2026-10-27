@@ -1174,3 +1174,31 @@
   border-bottom:0;
   box-shadow:none;
 }
+
+/* v30: Align inner-page branding to the left edge of main content. */
+@media(min-width:701px){
+ .app-shell:not(.home-top-feature){--inner-side:clamp(170px,13vw,205px)}
+ .app-shell:not(.home-top-feature) .masthead .brand{position:static}
+ .app-shell:not(.home-top-feature) .masthead .brand-text{
+  position:absolute;top:50%;left:calc(var(--inner-side) + 20px);
+  transform:translateY(-50%);margin:0;max-width:calc(100% - var(--inner-side) - 40px);
+  align-items:flex-start;text-align:left;
+ }
+ .app-shell:not(.home-top-feature) .masthead .brand-text>span,
+ .app-shell:not(.home-top-feature) .masthead .brand-text em{text-align:left}
+}
+@media(min-width:701px) and (max-width:1200px){
+ .app-shell:not(.home-top-feature){--inner-side:170px}
+}
+@media(min-width:701px) and (max-width:950px){
+ .app-shell:not(.home-top-feature){--inner-side:148px}
+}
+@media(max-width:700px){
+ .app-shell:not(.home-top-feature) .masthead .brand{position:static}
+ .app-shell:not(.home-top-feature) .masthead .brand-text{
+  position:absolute;top:50%;left:72px;transform:translateY(-50%);
+  margin:0;max-width:calc(100% - 128px);align-items:flex-start;text-align:left;
+ }
+ .app-shell:not(.home-top-feature) .masthead .brand-text>span,
+ .app-shell:not(.home-top-feature) .masthead .brand-text em{text-align:left}
+}
