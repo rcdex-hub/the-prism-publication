@@ -71,3 +71,43 @@
 #preview-content figcaption{font-size:10px;color:#657669;margin-top:6px;}
 #preview-content>p:not(.cms-preview-meta){font-size:13px;line-height:1.8;}
 @media(max-width:500px){.cms-search{grid-template-columns:1fr 112px;}.cms-publish-steps{display:grid;}}
+
+/* CMS v3: GitHub-authorized editor gate, displayed before dashboard initialization. */
+#cms-workspace[hidden],#cms-access[hidden],#cms-access-error[hidden]{display:none!important;}
+.cms-access{
+  min-height:100dvh;display:grid;place-items:center;padding:25px 16px;
+  background:radial-gradient(circle at 80% 15%,rgba(231,195,66,.15),transparent 35%),
+    linear-gradient(145deg,#053e30,#00261d 75%);
+}
+.cms-access-card{
+  width:min(480px,100%);padding:clamp(20px,4vw,36px);
+  border-radius:19px;background:#fff;box-shadow:0 20px 70px rgba(0,15,10,.35);
+  color:#1c3b2d;
+}
+.cms-access-brand{
+  display:flex;align-items:center;gap:12px;margin-bottom:22px;
+  color:#003e2e;font-size:24px;font-weight:900;letter-spacing:-.04em;line-height:1.1;
+}
+.cms-access-brand img{border-radius:50%;width:68px;height:68px;}
+.cms-access-brand small{display:block;font-size:10px;font-weight:600;letter-spacing:.15em;margin-top:6px;color:#537567;}
+.cms-access-pill{
+  display:inline-block;font-size:10px;font-weight:800;letter-spacing:.1em;
+  color:#04734e;background:#e4f3e9;padding:5px 9px;border-radius:6px;
+  margin-bottom:8px;text-transform:uppercase;
+}
+.cms-access h1{font-size:clamp(24px,3vw,34px);margin:3px 0 10px;}
+.cms-access p{font-size:12px;line-height:1.7;color:#55695c;}
+#cms-access-form{display:grid;gap:9px;margin:21px 0 13px;}
+#cms-access-form label{font-size:12px;font-weight:700;}
+#cms-access-form input{width:100%;font-size:14px;}
+#cms-access-form button{padding:11px 13px;margin-top:4px;}
+.cms-access-hint{background:#f4f8f3;padding:10px;border-radius:9px;}
+.cms-access .cms-access-error{
+  border-left:3px solid #b24835;padding:9px;background:#fff2ee;
+  color:#9f3525;font-weight:650;
+}
+.cms-access-links{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:11px;margin-top:18px;}
+.cms-access-links a{color:#087751;font-weight:700;text-decoration:underline;}
+.cms-editor-identity{display:block;margin-top:6px;color:#087751!important;font-size:11px!important;letter-spacing:0!important;}
+.admin-sidebar #cms-sign-out{color:#ffe1a3;}
+@media(max-width:480px){.cms-access-card{padding:20px;}.cms-access-brand{font-size:20px;}}

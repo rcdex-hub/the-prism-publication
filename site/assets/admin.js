@@ -2,7 +2,6 @@
   'use strict';
   const $ = id => document.getElementById(id);
   const DRAFT_KEY = 'prism_cms_local_draft_v1';
-  const SETTINGS_KEY = 'prism_cms_repository_v1';
   const esc = value => String(value ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
   const safeImage = value => {
     const v = String(value || '').trim();
@@ -18,6 +17,10 @@
   let pending = new Map(); // Temporary image uploads only. Never stores GitHub credentials.
   let busy = false;
   let connectedSha = null;
+  let signedIn = false;
+  const EDITOR_OWNER = 'rcdex-hub';
+  const EDITOR_REPO = 'the-prism-publication';
+  const EDITOR_BRANCH = 'main';
 
   function notice(message, isError = false) {
     const el = $('admin-notice');
@@ -150,14 +153,10 @@
     } catch(err) {event.target.value='';notice(err.message,true);}
   }
   function repoDetails() {
-    const owner = $('github-owner').value.trim();
-    const repo = $('github-repo').value.trim();
-    const branch = $('github-branch').value.trim() || 'main';
+    if (!signedIn) throw new Error('Sign in as an authorized GitHub editor first.');
     const token = $('github-token').value.trim();
-    if (!/^[a-zA-Z0-9-]+$/.test(owner) || !/^[a-zA-Z0-9_.-]+$/.test(repo) || !/^[\w./-]+$/.test(branch) || !token)
-      throw new Error('Enter a valid GitHub username, repository name, branch, and access token.');
-    localStorage.setItem(SETTINGS_KEY, JSON.stringify({owner,repo,branch})); // Never store token.
-    return {owner,repo,branch,token};
+    if (!token) throw new Error('Session expired. Sign in again to publish.');
+    return {owner:EDITOR_OWNER,repo:EDITOR_REPO,branch:EDITOR_BRANCH,token};
   }
   function apiUrl(details,path) {
     const p = path.split('/').map(encodeURIComponent).join('/');
@@ -252,6 +251,7 @@
     } finally {setBusy(false);}
   }
   async function start() {
+    if (!signedIn) return;
     try {
       const response = await fetch('content/articles.json',{cache:'no-store'});
       if(!response.ok)throw new Error(`Could not load publication JSON (${response.status})`);
@@ -263,10 +263,9 @@
         try {const local=JSON.parse(stored);if(Array.isArray(local)){items=local;notice('Your browser-only draft was recovered. It is not yet public.');}}
         catch {localStorage.removeItem(DRAFT_KEY);}
       }
-      const details=JSON.parse(localStorage.getItem(SETTINGS_KEY)||'{}');
-      $('github-owner').value=details.owner||'rcdex-hub';
-      $('github-repo').value=details.repo||'the-prism-publication';
-      $('github-branch').value=details.branch||'main';
+      $('github-owner').value=EDITOR_OWNER;
+      $('github-repo').value=EDITOR_REPO;
+      $('github-branch').value=EDITOR_BRANCH;
       render();if(items.length)selectItem(items[0].id);
     } catch(err) {notice(err.message+'. CMS requires a website served over HTTPS or localhost.',true);}
   }
@@ -310,5 +309,58 @@
   $('close-preview').addEventListener('click',()=>$('preview-dialog').close());
   $('test-github').addEventListener('click',testRepo);
   $('publish-github').addEventListener('click',publish);
-  start();
+
+  async function signIn(event) {
+    event.preventDefault();
+    const token=$('cms-access-token').value.trim();
+    const button=$('cms-access-submit');
+    if (!token) return;
+    button.disabled=true;button.textContent='Checking GitHub permissions…';
+    $('cms-access-error').hidden=true;
+    try {
+      const headers={
+        Accept:'application/vnd.github+json',
+        Authorization:'Bearer '+token,
+        'X-GitHub-Api-Version':'2022-11-28'
+      };
+      const [identityResponse,repoResponse]=await Promise.all([
+        fetch('https://api.github.com/user',{headers,cache:'no-store'}),
+        fetch('https://api.github.com/repos/'+EDITOR_OWNER+'/'+EDITOR_REPO,{headers,cache:'no-store'})
+      ]);
+      if(!identityResponse.ok||!repoResponse.ok) {
+        throw new Error('GitHub could not verify this token. Check that it is active and permitted for The Prism repository.');
+      }
+      const [identity,repository]=await Promise.all([identityResponse.json(),repoResponse.json()]);
+      if(!identity.login||repository.full_name?.toLowerCase()!==(EDITOR_OWNER+'/'+EDITOR_REPO).toLowerCase()||repository.permissions?.push!==true){
+        throw new Error('This GitHub account does not have write access to The Prism repository.');
+      }
+      // This is an in-memory client gate, not a server-side session.
+      signedIn=true;
+      $('github-token').value=token;
+      $('cms-access-token').value='';
+      $('cms-editor-identity').textContent='Verified GitHub editor: @'+identity.login;
+      $('cms-workspace').hidden=false;
+      $('cms-access').hidden=true;
+      await start();
+    }catch(error){
+      signedIn=false;
+      $('github-token').value='';
+      const message=error instanceof TypeError?'Cannot connect to GitHub. Check your internet connection and try again.':error.message;
+      $('cms-access-error').textContent=message;
+      $('cms-access-error').hidden=false;
+    }finally{button.disabled=false;button.textContent='Verify access & open dashboard';}
+  }
+  function signOut(){
+    if (pending.size && !confirm('Unpublished photo uploads will be lost when you sign out. Browser text drafts stay saved. Sign out?')) return;
+    signedIn=false;connectedSha=null;pending.clear();
+    $('github-token').value='';
+    $('cms-access-token').value='';
+    $('cms-workspace').hidden=true;
+    $('cms-access').hidden=false;
+    $('cms-editor-identity').textContent='';
+    $('cms-access-error').hidden=true;
+    window.scrollTo({top:0,behavior:'instant'});
+  }
+  $('cms-access-form').addEventListener('submit',signIn);
+  $('cms-sign-out').addEventListener('click',signOut);
 })();
