@@ -1,0 +1,171 @@
+{
+  "site": {
+    "name": "The Prism",
+    "school": "Calbayog City National High School",
+    "tagline": "Stories that inform. Voices that inspire. A brighter tomorrow.",
+    "description": "The official online school publication of Calbayog City National High School, a platform for responsible reporting, student expression, and creative storytelling."
+  },
+  "items": [
+    {
+      "id": "greener-safer-campus",
+      "type": "news",
+      "title": "CCNHS Launches Greener and Safer Campus Initiative",
+      "author": "The Prism News Desk",
+      "date": "2026-10-27",
+      "image": "assets/images/campus-feature.webp",
+      "imageAlt": "Illustrative campus image used as a sample publication banner.",
+      "caption": "Illustrative campus image used as a sample publication banner.",
+      "excerpt": "A sample school news article about student-led initiatives for a cleaner, safer and more inclusive learning environment.",
+      "body": [
+        "This is placeholder news content demonstrating how campus updates can appear in The Prism. Student journalists may report on tree-planting efforts, classroom cleanups, and programs that support a safer learning environment.",
+        "An actual report should explain what happened, when it occurred, who organized the activity, and how learners and teachers participated. Every claim and quotation must be checked with reliable sources before publishing.",
+        "The Prism encourages student writers to listen carefully, report accurately, and highlight the impact of school initiatives on the wider community. Replace this demonstration with a verified, school-approved story before public launch."
+      ],
+      "status": "published",
+      "featured": true
+    },
+    {
+      "id": "which-path-will-you-take",
+      "type": "cartoon",
+      "title": "Which Path Will You Take?",
+      "author": "The Prism Editorial Artists",
+      "date": "2026-10-26",
+      "image": "assets/images/cartoon-choices.webp",
+      "imageAlt": "Sample editorial cartoon showing choices between opportunity, discipline, distraction, and procrastination.",
+      "caption": "Sample editorial cartoon showing choices between opportunity, discipline, distraction, and procrastination.",
+      "excerpt": "Discipline today builds a brighter tomorrow.",
+      "body": [
+        "The cartoon asks a simple question: which direction will a student choose when faced with competing influences? Its signposts represent distractions, procrastination, opportunity, and self-discipline.",
+        "The central message is that progress comes through thoughtful choices. Perseverance, responsibility, and focus can help young people work toward their goals even when everyday distractions compete for attention.",
+        "This is a placeholder cartoon and interpretation. When publishing original artwork, credit the artist and include the intended message clearly."
+      ],
+      "status": "published",
+      "featured": true
+    },
+    {
+      "id": "responsible-digital-newsroom",
+      "type": "infographic",
+      "title": "Six Steps to a Responsible Digital Newsroom",
+      "author": "The Prism Multimedia Team",
+      "date": "2026-10-25",
+      "image": "assets/images/infographic-newsroom.webp",
+      "imageAlt": "Illustrative infographic of a six-step digital newsroom workflow.",
+      "caption": "Illustrative infographic of a six-step digital newsroom workflow.",
+      "excerpt": "Plan, report, verify, publish, engage, and archive: six practices for student journalists.",
+      "body": [
+        "PLAN — Identify relevant and meaningful school stories.",
+        "REPORT — Collect interviews, observations, and supporting information.",
+        "VERIFY — Confirm names, facts, quotations, sources, and photo permissions.",
+        "PUBLISH — Present an accurate and accessible story.",
+        "ENGAGE — Encourage respectful audience participation.",
+        "ARCHIVE — Preserve published issues and supporting documentation."
+      ],
+      "status": "published",
+      "featured": true
+    },
+    {
+      "id": "student-green-campaign",
+      "type": "gallery",
+      "title": "In Pictures: Students Care for a Greener Campus",
+      "author": "The Prism Photo Desk",
+      "date": "2026-10-24",
+      "image": "assets/images/gallery-treeplanting.webp",
+      "imageAlt": "Illustrative photo of students planting saplings in a school garden.",
+      "caption": "Illustrative photo of students planting saplings in a school garden.",
+      "excerpt": "Photo gallery placeholder celebrating environmental awareness and teamwork.",
+      "body": [
+        "This gallery is a sample layout for the publication’s photojournalism section. It demonstrates how photographs and captions can tell a complete story.",
+        "Replace demonstration images with consented school photographs. Identify subjects appropriately, and ensure captions accurately explain what is shown."
+      ],
+      "status": "published",
+      "featured": true
+    },
+    {
+      "id": "power-of-student-voice",
+      "type": "editorial",
+      "title": "The Power of a Student’s Voice",
+      "author": "The Prism Editorial Board",
+      "date": "2026-10-23",
+      "image": "assets/images/editorial-pen.webp",
+      "imageAlt": "Illustrative fountain pen on paper representing school journalism.",
+      "caption": "Illustrative fountain pen on paper representing school journalism.",
+      "excerpt": "In a world where information moves faster than ever, the student’s voice remains a powerful force for change.",
+      "body": [
+        "A student publication is more than a collection of headlines. It can be a space where learners ask meaningful questions, communicate fairly, and develop a sense of responsibility toward their community.",
+        "Student journalists do their strongest work when they combine curiosity with evidence. A thoughtful editorial recognizes different experiences, avoids personal attacks, and invites readers to consider ideas with care.",
+        "This is sample editorial content. The official editorial board should review the final position and sign-off before publication."
+      ],
+      "status": "published",
+      "featured": true
+    },
+    {
+      "id": "stallions-show-heart",
+      "type": "sports",
+      "title": "CCNHS Stallions Show Heart in Regional Meet",
+      "author": "The Prism Sports Desk",
+      "date": "2026-10-22",
+      "image": "assets/images/sports-basketball.webp",
+      "imageAlt": "Illustrative sports photograph featuring student basketball players in a game.",
+      "caption": "Illustrative sports photograph featuring student basketball players in a game.",
+      "excerpt": "A sample sports report on teamwork, dedication, and pride in school athletics.",
+      "body": [
+        "The court comes alive through teamwork, quick decisions, and mutual support. This example shows how a student reporter can communicate the energy of a sports event without losing sight of accurate details.",
+        "A final article should include confirmed team names, scores, dates, coaches, and athlete quotations. Even in defeat, sportsmanship and determination deserve fair coverage.",
+        "This sports story is placeholder text for the website demonstration and does not represent a verified match result."
+      ],
+      "status": "published",
+      "featured": true
+    },
+    {
+      "id": "campus-journalism-workshop",
+      "type": "feature",
+      "title": "Student Journalism Workshop Inspires Responsible Storytelling",
+      "author": "The Prism Features Team",
+      "date": "2026-10-21",
+      "image": "assets/images/feature-speaker.webp",
+      "imageAlt": "Photo from a school-related learning session; replace the caption with verified event information before publication.",
+      "caption": "Photo from a school-related learning session; replace the caption with verified event information before publication.",
+      "excerpt": "A feature-story example about learning, media literacy, ethical reporting, and student participation.",
+      "body": [
+        "Journalism workshops give students opportunities to strengthen their observation, interviewing, writing, and fact-checking skills. This sample feature shows how the voices of speakers and participants can bring an educational story to life.",
+        "The article page demonstrates a title, publication date, byline, lead photo, caption, and full story. Editors should independently confirm the details of every event before posting a real story.",
+        "All visible text in this example is placeholder content intended for the initial website."
+      ],
+      "status": "published",
+      "featured": false
+    },
+    {
+      "id": "community-media-learning",
+      "type": "feature",
+      "title": "Learning Together: A School Community Conversation",
+      "author": "The Prism Features Team",
+      "date": "2026-10-20",
+      "image": "assets/images/news-seminar.webp",
+      "imageAlt": "Photograph from an educational session, included as sample site imagery.",
+      "caption": "Photograph from an educational session, included as sample site imagery.",
+      "excerpt": "An example of how the school publication can highlight talks, workshops, and community discussions.",
+      "body": [
+        "Good stories often start when participants gather to share insights, ask questions, and exchange experiences. A school publication can preserve those moments through thoughtful reports and meaningful images.",
+        "This article is an example only. Verify the event title, participants, location, and necessary photo permissions before using the image for a factual publication."
+      ],
+      "status": "published",
+      "featured": false
+    },
+    {
+      "id": "sample-video",
+      "type": "video",
+      "title": "Campus Journalism: A Sample Video Feature",
+      "author": "The Prism Multimedia Team",
+      "date": "2026-10-19",
+      "image": "assets/images/news-seminar.webp",
+      "imageAlt": "Sample thumbnail for a future school journalism video.",
+      "caption": "Sample thumbnail for a future school journalism video.",
+      "excerpt": "Placeholder video content. Embed an approved recording when one becomes available.",
+      "body": [
+        "This sample demonstrates how a video feature can be presented alongside articles, photographs, and cartoons. Add a public video link after confirming publishing rights and consent."
+      ],
+      "status": "published",
+      "featured": false
+    }
+  ]
+}

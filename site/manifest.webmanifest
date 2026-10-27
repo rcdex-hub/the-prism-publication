@@ -1,0 +1,16 @@
+{
+  "name": "The Prism — CCNHS Official School Publication",
+  "short_name": "The Prism",
+  "description": "The online school publication of Calbayog City National High School.",
+  "id": "./index.html",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#edf3f1",
+  "theme_color": "#003e2e",
+  "orientation": "any",
+  "icons": [
+    {"src":"assets/images/icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"assets/images/icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}

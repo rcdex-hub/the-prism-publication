@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#124b34"><meta name="robots" content="noindex, nofollow">
+  <title>Editor Portal | The Prism</title>
+  <link rel="icon" href="assets/images/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/admin.css">
+  <script defer src="assets/admin.js"></script>
+</head>
+<body class="admin-page">
+<div class="admin-wrap">
+  <aside class="admin-sidebar">
+    <a class="admin-brand" href="index.html"><img src="assets/images/prism-logo.webp" width="56" height="56" alt="The Prism logo"><span><b>The<br>Prism</b><small>EDITOR PORTAL</small></span></a>
+    <div class="side-group">MANAGEMENT</div>
+    <button class="side-button selected" data-filter="all">▦ &nbsp; Dashboard</button>
+    <button class="side-button" data-filter="feature">▤ &nbsp; Feature Stories</button><button class="side-button" data-filter="news">▣ &nbsp; News</button><button class="side-button" data-filter="editorial">✎ &nbsp; Editorial</button><button class="side-button" data-filter="sports">♜ &nbsp; Sports</button>
+    <button class="side-button" data-filter="cartoon">✎ &nbsp; Editorial Cartoons</button>
+    <div class="side-group">TOOLS</div>
+    <button class="side-button" id="show-publishing">↥ &nbsp; Publish to GitHub</button>
+    <a class="side-button" href="index.html">↗ &nbsp; View Website</a>
+    <p class="side-note">This editor works on Vercel. Publishing needs a GitHub token with permission to write to your own repository.</p>
+  </aside>
+  <div class="admin-body">
+    <header class="admin-top"><div><small>CALBAYOG CITY NATIONAL HIGH SCHOOL</small><h1>Publication Dashboard</h1><p>Manage sample articles, illustrations, and editorial content.</p></div><a class="outline-btn" href="index.html">View live site ↗</a></header>
+    <div id="admin-notice" class="admin-notice" role="status" hidden></div>
+    <div class="admin-toolbar"><div class="admin-stats" id="admin-stats"></div><div class="admin-toolbar-actions"><button class="outline-btn" id="restore-button">Discard local edits</button><button class="primary-btn" id="new-feature">+ New Story</button><button class="brown-btn" id="new-cartoon">+ New Cartoon</button></div></div>
+    <div class="admin-panels">
+      <section class="admin-panel articles-panel"><div class="panel-heading"><div><h2>Editorial Content</h2><p>Updates in this browser are private drafts until published.</p></div><span class="chip neutral" id="filter-chip">All items</span></div><div class="admin-list" id="admin-list"></div></section>
+      <section class="admin-panel editor-panel" id="editor-panel"><div class="panel-heading"><div><h2 id="editor-title">Edit content</h2><p>Choose an item or add a new one.</p></div></div>
+      <form id="editor-form">
+        <input id="article-id" type="hidden">
+        <label>Content type<select id="article-type"><option value="feature">Feature Story</option><option value="news">News</option><option value="editorial">Editorial</option><option value="sports">Sports</option><option value="infographic">Infographic</option><option value="gallery">Photo Gallery</option><option value="video">Video (link)</option><option value="cartoon">Editorial Cartoon</option></select></label>
+        <label>Title<input id="article-title" required maxlength="140" placeholder="Article or cartoon title"></label>
+        <div class="form-pair"><label>Author<input id="article-author" required maxlength="100" placeholder="Student journalist"></label><label>Publication date<input id="article-date" type="date" required></label></div>
+        <label>Short excerpt<textarea id="article-excerpt" maxlength="270" rows="2" required placeholder="A short introduction for the homepage"></textarea></label>
+        <label>Full story / explanation<textarea id="article-body" rows="6" required placeholder="Write paragraphs separated by a blank line"></textarea></label>
+        <label>Photo caption<input id="article-caption" maxlength="240" placeholder="Describe the photo or illustration"></label>
+        <label>Image path or URL<input id="article-image" placeholder="assets/images/your-photo.webp"></label>
+        <label>Or choose a new image to upload when publishing<input type="file" id="article-file" accept="image/jpeg,image/png,image/webp"></label><div id="image-note" class="field-hint">Image upload needs GitHub publishing. Recommended: landscape JPG or WEBP, smaller than 6 MB.</div>
+        <img id="image-preview" class="editor-preview" alt="Selected article media preview" hidden>
+        <div class="form-pair"><label>Status<select id="article-status"><option value="published">Published</option><option value="draft">Draft (hidden on site)</option></select></label><label class="check-label"><input type="checkbox" id="article-featured"> Highlight on homepage</label></div>
+        <div class="edit-actions"><button class="primary-btn" type="submit">Save local draft</button><button class="outline-btn" type="button" id="cancel-edit">Cancel</button><button class="danger-btn" type="button" id="delete-article">Delete item</button></div>
+      </form>
+      </section>
+    </div>
+    <section class="admin-panel github-panel" id="publishing-panel"><div class="panel-heading"><div><h2>Publish changes to Vercel</h2><p>When you publish, this portal commits <code>content/articles.json</code> and any newly selected images to your repository.</p></div></div>
+      <div class="github-fields"><label>GitHub username / owner<input id="github-owner" spellcheck="false" placeholder="your-username"></label><label>Repository name<input id="github-repo" spellcheck="false" placeholder="the-prism-publication"></label><label>Branch<input id="github-branch" spellcheck="false" value="main"></label><label>Fine-grained access token (not saved)<input id="github-token" type="password" autocomplete="off" placeholder="github_pat_…"></label></div>
+      <p class="field-hint">Create a fine-grained personal access token with <b>Contents: Read and write</b> permission for <b>only this repository</b>. It stays in this page's memory; don't put tokens in GitHub files or share them. GitHub itself enforces publishing permissions. After publishing, Vercel updates the public website.</p>
+      <div class="publish-actions"><button id="test-github" class="outline-btn">Check repository</button><button id="publish-github" class="primary-btn">Publish saved changes</button><span id="publish-result" role="status"></span></div>
+    </section>
+    <div class="admin-foot">© The Prism · Sample content is provided for demonstration only. Verify stories and obtain image permissions before public release.</div>
+  </div>
+</div>
+</body>
+</html>
