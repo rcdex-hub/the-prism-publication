@@ -731,49 +731,59 @@
   }
 }
 
-/* v17 — Smaller faceted wordmark, inset from the upper-right corner.
-   The original full PRISM artwork is rendered with contain, leaving
-   a reliable right-hand safe area so its final M is never cropped. */
+/* v18 — Compact publication wordmark anchored to the upper-right corner. */
+.app-shell.home-top-feature .masthead .brand-text strong{
+  max-width:100%;
+  height:auto;
+  aspect-ratio:1509/309;
+  background-size:contain;
+  background-position:center right;
+  overflow:visible;
+}
 @media(min-width:701px){
   .app-shell.home-top-feature .masthead{
-    top:clamp(12px,1.8vw,22px);
-    right:clamp(36px,4.5vw,80px);
+    top:12px;
+    right:18px;
     left:auto;
     width:auto;
-    max-width:calc(100vw - var(--prism-sidebar-width, 205px) - 60px);
+    max-width:calc(100vw - var(--prism-sidebar-width, 205px) - 36px);
     overflow:visible;
   }
   .app-shell.home-top-feature .masthead .brand-text strong{
-    width:clamp(200px,24vw,335px);
-    max-width:100%;
-    height:auto;
-    aspect-ratio:1509/309;
-    background-size:contain;
-    background-position:center right;
-    overflow:visible;
+    width:clamp(160px,17vw,240px);
+  }
+  .app-shell.home-top-feature .masthead .brand-text>span{
+    font-size:clamp(5.5px,.5vw,7px);
+    letter-spacing:.14em;
+    margin-top:4px;
+  }
+  .app-shell.home-top-feature .masthead .brand-text em{
+    font-size:clamp(5.5px,.48vw,6.5px);
+    letter-spacing:.18em;
   }
 }
 @media(max-width:700px){
+  .app-shell.home-top-feature .masthead{
+    top:8px;
+  }
   .app-shell.home-top-feature .masthead .brand{
     max-width:calc(100% - 110px);
-    margin-right:clamp(16px,5vw,26px);
+    margin-right:10px;
   }
   .app-shell.home-top-feature .masthead .brand-text{
     min-width:0;
     max-width:100%;
   }
   .app-shell.home-top-feature .masthead .brand-text strong{
-    width:clamp(110px,36vw,170px);
-    max-width:100%;
-    aspect-ratio:1509/309;
-    height:auto;
-    background-size:contain;
-    background-position:center right;
-    overflow:visible;
+    width:clamp(96px,30vw,140px);
   }
-}
-@media(max-width:360px){
-  .app-shell.home-top-feature .masthead .brand-text strong{
-    width:clamp(103px,35vw,124px);
+  .app-shell.home-top-feature .masthead .brand-text>span{
+    font-size:5px;
+    letter-spacing:.04em;
+    margin-top:3px;
+  }
+  .app-shell.home-top-feature .masthead .brand-text em{
+    font-size:5px;
+    letter-spacing:.08em;
   }
 }
