@@ -19,25 +19,13 @@
         '<span class="story-carousel-copy story-carousel-overlay"><strong>'+title+'</strong>'+
         '<span class="story-carousel-link">'+action+' <span aria-hidden="true">→</span></span></span></a>';
     }
-    // Lightweight vector icons remain sharp on all devices.
-    var chevronPrev='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m14.5 5-7 7 7 7"/></svg>';
-    var chevronNext='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m9.5 5 7 7-7 7"/></svg>';
-    var pauseIcon='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg>';
-    var playIcon='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M8 5.5a1 1 0 0 1 1.53-.85l10 6.5a1 1 0 0 1 0 1.7l-10 6.5A1 1 0 0 1 8 18.5z"/></svg>';
     var oneSet=articles.map(card).join('');
     root.innerHTML='<section class="story-carousel" role="region" aria-roledescription="carousel" aria-label="Published articles from News, Editorial and Sports">'+
-      '<div class="story-carousel-toolbar"><span class="story-carousel-heading">NEWS, EDITORIAL &amp; SPORTS <small class="story-carousel-total">'+count+' ARTICLES</small></span>'+
-      '<div class="story-carousel-actions">'+
-      '<button class="carousel-icon-btn" type="button" data-story-prev aria-label="Previous stories" title="Previous stories">'+chevronPrev+'</button>'+
-      '<button class="carousel-icon-btn carousel-icon-btn--playback" type="button" data-story-pause aria-label="Pause rotating stories" aria-pressed="false" title="Pause rotating stories">'+pauseIcon+'</button>'+
-      '<button class="carousel-icon-btn" type="button" data-story-next aria-label="Next stories" title="Next stories">'+chevronNext+'</button></div></div>'+
+      '<div class="story-carousel-toolbar"><span class="story-carousel-heading">NEWS, EDITORIAL &amp; SPORTS <small class="story-carousel-total">'+count+' ARTICLES</small></span></div>'+
       '<div class="story-carousel-viewport"><div class="story-carousel-track">'+oneSet+oneSet+'</div></div></section>';
     var carousel=root.querySelector('.story-carousel');
     var track=root.querySelector('.story-carousel-track');
     var cards=Array.from(track.children);
-    var prev=root.querySelector('[data-story-prev]');
-    var next=root.querySelector('[data-story-next]');
-    var pause=root.querySelector('[data-story-pause]');
     var reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
     var userPaused=reduced.matches, hoverPaused=false, focusPaused=false;
     var index=0, animating=false, timer=null, touchX=null, suppressClick=false;
@@ -60,12 +48,6 @@
         card.tabIndex=visible?0:-1;
         card.setAttribute('aria-hidden',String(!visible));
       });
-    }
-    function updatePause() {
-      pause.innerHTML=userPaused?playIcon:pauseIcon;
-      pause.setAttribute('aria-pressed',String(userPaused));
-      var label=userPaused?'Play rotating stories':'Pause rotating stories';
-      pause.setAttribute('aria-label',label);pause.title=label;
     }
     function stop() {window.clearTimeout(timer);timer=null;}
     function schedule() {
@@ -94,9 +76,12 @@
       if(index===count){index=0;position(false);}
       syncAccess();
     });
-    prev.addEventListener('click',function(){move(-1);schedule();});
-    next.addEventListener('click',function(){move(1);schedule();});
-    pause.addEventListener('click',function(){userPaused=!userPaused;updatePause();schedule();});
+    // Arrow keys remain available without on-screen navigation buttons.
+    carousel.addEventListener('keydown',function(e){
+      if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
+        e.preventDefault();move(e.key==='ArrowLeft'?-1:1);schedule();
+      }
+    });
     carousel.addEventListener('mouseenter',function(){hoverPaused=true;stop();});
     carousel.addEventListener('mouseleave',function(){hoverPaused=false;schedule();});
     carousel.addEventListener('focusin',function(){focusPaused=true;stop();});
@@ -124,10 +109,11 @@
     window.addEventListener('pagehide',stop);
     window.addEventListener('pageshow',schedule);
     if(reduced.addEventListener)reduced.addEventListener('change',function(e){
-      if(e.matches){userPaused=true;stop();animating=false;index=0;position(false);syncAccess();}
-      updatePause();schedule();
+      userPaused=e.matches;
+      if(e.matches){stop();animating=false;index=0;position(false);syncAccess();}
+      schedule();
     });
-    position(false);syncAccess();updatePause();schedule();
+    position(false);syncAccess();schedule();
   }
   window.PrismCarousel={mount:mount};
 })();
