@@ -137,6 +137,7 @@
         history.replaceState(null,'',section==='home'?'index.html':'index.html?page='+section);
       }
       if(section==='home')home();
+      else if(section==='epublication'&&window.PrismFlipbook)window.PrismFlipbook.mount(app);
       else if(pagemeta[section])listing(section);
       else if(page==='article')article();
       else app.innerHTML='<div class="inner-page"><h1>Page not found</h1><a href="index.html">Return Home</a></div>';

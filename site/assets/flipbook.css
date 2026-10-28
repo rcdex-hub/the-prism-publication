@@ -1,0 +1,73 @@
+/* The Prism — compact book-style e-Publication */
+.epub{height:100%;width:100%;min-height:0;display:flex;flex-direction:column;gap:9px;padding:clamp(9px,1.5vw,19px);overflow:hidden;background:linear-gradient(140deg,#eef5f1,#e1ebe5);color:#103b2d}
+.ep-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:0 0 auto;min-height:64px}
+.ep-kicker{font-size:9px;font-weight:800;letter-spacing:.18em;color:#0a8657}
+.ep-head h1{font-weight:900;font-size:clamp(22px,2.45vw,37px);line-height:1.08;letter-spacing:-.035em}
+.ep-head p{font-size:clamp(10px,.85vw,12px);color:#57695f;margin-top:3px}
+.ep-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:end}
+.ep-meta span{background:#fff;border:1px solid #d1e1d5;color:#006c45;padding:6px 9px;border-radius:6px;font-size:9px;font-weight:800;letter-spacing:.07em;white-space:nowrap}
+.ep-stage{flex:1 1 auto;min-height:0;min-width:0;display:grid;place-items:center;perspective:1800px;overflow:hidden}
+.ep-book{position:relative;width:min(100%,calc((100dvh - 220px)*1.415));height:min(100%,calc((100dvh - 220px)));max-width:100%;max-height:100%;aspect-ratio:1.415;display:grid;grid-template-columns:1fr 1fr;transform-style:preserve-3d;box-shadow:0 18px 42px rgba(0,38,24,.22);background:#fff;border-radius:6px}
+.ep-book:before{position:absolute;content:'';width:6px;left:calc(50% - 3px);top:0;bottom:0;z-index:6;pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.13),rgba(255,255,255,.4),rgba(0,0,0,.09));border-radius:5px}
+.ep-left,.ep-right{min-width:0;min-height:0;position:relative;overflow:hidden}
+.ep-left{border-radius:5px 0 0 5px}
+.ep-right{border-radius:0 5px 5px 0}
+.ep-page{width:100%;height:100%;position:relative;overflow:hidden;background:#fff}
+.ep-page img{width:100%;height:100%;object-fit:contain;user-select:none;pointer-events:none}
+.ep-blank{background:linear-gradient(145deg,#f9fcf9,#e3ede4)}
+.ep-inside{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:clamp(7px,1.3vw,20px);text-align:center;padding:10%;color:#0a583f}
+.ep-inside span{font-size:clamp(14px,3vw,39px);font-weight:900;letter-spacing:-.04em}
+.ep-inside strong{font-size:clamp(11px,1.4vw,21px)}
+.ep-inside small{font-size:9px;letter-spacing:.12em;color:#4c7362}
+.ep-page-missing{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;gap:9px;text-align:center;padding:20px;background:#fff;color:#264b3d}
+.ep-page.ep-image-missing img{visibility:hidden}
+.ep-page.ep-image-missing .ep-page-missing{display:flex}
+.ep-page-missing span{color:#a57a16;font-size:12px;font-weight:800;letter-spacing:.11em}
+.ep-page-missing strong{font-size:clamp(11px,1.3vw,16px)}
+.ep-page-missing small{max-width:180px;font-size:10px;overflow-wrap:anywhere}
+.ep-leaf{position:absolute;z-index:8;width:50%;height:100%;top:0;transform-style:preserve-3d;will-change:transform;transition:transform .66s cubic-bezier(.22,.69,.2,.98)}
+.ep-leaf-next{right:0;transform-origin:0 50%}
+.ep-leaf-prev{left:0;transform-origin:100% 50%}
+.ep-leaf-next.ep-leaf-turned{transform:rotateY(-180deg)}
+.ep-leaf-prev.ep-leaf-turned{transform:rotateY(180deg)}
+.ep-face{position:absolute;inset:0;backface-visibility:hidden;background:#fff;overflow:hidden}
+.ep-face.ep-back{transform:rotateY(180deg)}
+.ep-face .ep-page{height:100%;width:100%}
+.ep-toolbar{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.ep-navigation{display:flex;align-items:center;gap:11px}
+.ep-arrow{width:39px;height:39px;border:none;border-radius:50%;background:#006c48;color:#fff;font-size:26px;font-weight:500;line-height:1;display:grid;place-items:center;box-shadow:0 3px 9px #003e2e2b;transition:background .2s,transform .2s}
+.ep-arrow:hover:not(:disabled){background:#099065;transform:translateY(-1px)}
+.ep-arrow:disabled{background:#b3cbbf;cursor:not-allowed;box-shadow:none}
+.ep-indicator{font-size:clamp(10px,1vw,13px);font-weight:800;color:#0d4934;min-width:120px;text-align:center}
+.ep-zoom{font-size:11px;font-weight:700;color:#007c50;white-space:nowrap}
+.ep-zoom:hover{text-decoration:underline}
+.ep-thumbnails{display:flex;justify-content:center;gap:6px;min-height:37px;flex:0 0 auto}
+.ep-thumbnails button{display:flex;align-items:center;gap:7px;padding:5px 10px;background:white;color:#355a48;border:1px solid #d1e5d5;border-radius:7px;min-width:0}
+.ep-thumbnails button>span{font-weight:900;color:#005d3c}
+.ep-thumbnails button small{font-size:10px;white-space:nowrap}
+.ep-thumbnails button.is-current{background:#e1f3e6;border-color:#0a8b5b;box-shadow:inset 0 0 0 1px #0a8b5b}
+.ep-reader-tip{flex:0 0 auto;text-align:center;font-size:9px;color:#647c6b}
+.ep-sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-height:690px) and (min-width:761px){.ep-head{min-height:45px}.epub{gap:5px;padding:6px 12px}.ep-thumbnails{min-height:28px}.ep-thumbnails button{padding:3px 7px}.ep-arrow{height:29px;width:29px;font-size:22px}.ep-reader-tip{display:none}.ep-book{height:min(100%,calc(100dvh - 156px));width:min(100%,calc((100dvh - 156px)*1.415))}}
+@media(max-width:760px){
+ .epub{gap:6px;padding:9px 8px calc(65px + env(safe-area-inset-bottom))}
+ .ep-head{min-height:58px}
+ .ep-head h1{font-size:24px}
+ .ep-head p{font-size:10px}
+ .ep-meta span:nth-child(2){display:none}
+ .ep-meta span{font-size:8px;padding:4px 6px}
+ .ep-book{height:100%;width:auto;max-width:100%;max-height:100%;aspect-ratio:1448 / 2048;grid-template-columns:1fr;box-shadow:0 10px 28px #003e2e33}
+ .ep-book:before,.ep-left{display:none}
+ .ep-right{border-radius:6px}
+ .ep-leaf{width:100%;right:0;left:0}
+ .ep-navigation{gap:5px}
+ .ep-arrow{height:35px;width:35px;font-size:23px}
+ .ep-indicator{min-width:98px;font-size:10px}
+ .ep-zoom{font-size:10px}
+ .ep-thumbnails{min-height:30px;gap:3px}
+ .ep-thumbnails button{justify-content:center;padding:5px 7px}
+ .ep-thumbnails button small{display:none}
+ .ep-reader-tip{display:none}
+}
+@media(max-width:400px){.ep-zoom{font-size:0}.ep-zoom span{font-size:17px}.ep-head{min-height:47px}.ep-head p{max-width:220px}.ep-indicator{min-width:83px}}
+@media(prefers-reduced-motion:reduce){.ep-leaf{transition:none}.ep-arrow{transition:none}}
