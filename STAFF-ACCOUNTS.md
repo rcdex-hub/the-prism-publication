@@ -1,6 +1,6 @@
 # Staff accounts
 
-Sign in as an Administrator, open **Staff accounts** in the dashboard sidebar, and enter a unique username, staff email, password, and role. Select **Add staff account**. The new staff member can sign in with that username, password, and assigned role.
+Sign in as an Administrator and open **Staff accounts** in the dashboard sidebar. This opens the dedicated `/api/staff-accounts` page. Enter a unique username, staff email, password, and role, then select **Add staff account**. The new staff member can sign in with that username, password, and assigned role. Use **Back to content** or the sidebar links to return to publication content.
 
 - **Editor** creates and previews browser drafts.
 - **Administrator** also manages staff accounts and publishes when the site's publishing integration is configured.

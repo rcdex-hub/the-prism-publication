@@ -1,5 +1,6 @@
 #manage-staff[hidden],#staff-panel[hidden],#staff-status[hidden]{display:none!important}
 #staff-panel{margin-top:22px;scroll-margin-top:20px}
+.staff-accounts-page #staff-panel{margin-top:0}
 .staff-panel-heading{align-items:center}
 .staff-panel-heading h2:focus{outline:2px solid #d0ae4d;outline-offset:4px}
 .staff-panel-tools{display:flex;gap:8px;flex-wrap:wrap}

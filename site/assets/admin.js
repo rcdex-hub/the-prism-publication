@@ -11,7 +11,8 @@
   let original = {site:{},items:[]};
   let items = [];
   let selectedId = null;
-  let filter = 'all';
+  const requestedFilter = new URLSearchParams(location.search).get('filter');
+  let filter = ['all','news','editorial','sports','gallery','drafts'].includes(requestedFilter) ? requestedFilter : 'all';
   let searchText = '';
   let statusFilter = 'all';
   let pending = new Map(); // Temporary image uploads only. Never stores GitHub credentials.
@@ -219,6 +220,9 @@
       if(!response.ok){location.replace('/admin.html');return;}
       const identity=await response.json();
       const isAdmin=identity.role==='admin';
+      const staffLink=$('manage-staff');
+      if(staffLink)staffLink.hidden=!isAdmin;
+      document.querySelectorAll('[data-filter]').forEach(button=>button.classList.toggle('selected',button.dataset.filter===filter));
       $('cms-editor-identity').textContent='Signed in: '+identity.user+' · '+(isAdmin?'Administrator':'Editor');
       if(!isAdmin){
         $('publish-github').disabled=true;

@@ -80,18 +80,6 @@
     }
   }
 
-  menu.addEventListener('click', () => {
-    panel.hidden = false;
-    menu.setAttribute('aria-expanded', 'true');
-    panel.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
-    document.getElementById('staff-heading').focus({preventScroll: true});
-    loadStaff();
-  });
-  document.getElementById('close-staff').addEventListener('click', () => {
-    panel.hidden = true;
-    menu.setAttribute('aria-expanded', 'false');
-    menu.focus();
-  });
   refresh.addEventListener('click', loadStaff);
   showPassword.addEventListener('click', () => {
     const showing = password.type === 'password';
@@ -133,8 +121,24 @@
     }
   });
 
-  fetch('/api/auth?action=session', {credentials: 'same-origin', cache: 'no-store'})
-    .then(response => response.ok ? response.json() : null)
-    .then(identity => { if (identity?.role === 'admin') menu.hidden = false; })
-    .catch(() => {});
+  document.getElementById('cms-sign-out').addEventListener('click', async () => {
+    password.value = '';
+    try {
+      await fetch('/api/auth?action=logout', {method:'POST', credentials:'same-origin', cache:'no-store', headers:{'Content-Type':'application/json'}, body:'{}'});
+    } finally { location.replace('/admin.html'); }
+  });
+
+  async function start() {
+    try {
+      const response = await fetch('/api/auth?action=session', {credentials:'same-origin', cache:'no-store'});
+      if (!response.ok) { location.replace('/admin.html'); return; }
+      const identity = await response.json();
+      if (identity.role !== 'admin') { location.replace('/api/dashboard'); return; }
+      document.getElementById('cms-editor-identity').textContent = 'Signed in: ' + identity.user + ' · Administrator';
+      await loadStaff();
+    } catch {
+      message('Your staff workspace could not connect. Reload the page to try again.', true);
+    }
+  }
+  start();
 })();
