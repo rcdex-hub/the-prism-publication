@@ -55,6 +55,32 @@ export default async function handler(req,res){
   const body=req.body;
   if(!body||typeof body!=='object')return send(res,400,{error:'Expected JSON body'});
   try{
+    if(action==='publication-upload'){
+      const page=Number(body.page);
+      if(!Number.isInteger(page)||page<1||page>4)return send(res,400,{error:'The publication has pages 1 through 4'});
+      const match=/^data:image\/webp;base64,([A-Za-z0-9+/=]+)$/.exec(body.dataUrl||'');
+      if(!match)return send(res,400,{error:'Please upload a WebP publication image'});
+      const bytes=Buffer.from(match[1],'base64');
+      if(bytes.length<16||bytes.length>2*1024*1024||
+         bytes.toString('ascii',0,4)!=='RIFF'||bytes.toString('ascii',8,12)!=='WEBP')
+        return send(res,413,{error:'Invalid WebP image or image exceeds 2MB'});
+      const path='site/assets/images/epublication/page-'+String(page).padStart(2,'0')+'.webp';
+      const token=publishingToken(user);
+      let previousSha=null;
+      try{
+        const prior=await github(token,'/repos/'+REPO+'/contents/'+path+'?ref='+BRANCH);
+        previousSha=prior.sha;
+      }catch(error){if(error.status!==404)throw error;}
+      await github(token,'/repos/'+REPO+'/contents/'+path,{
+        method:'PUT',
+        body:JSON.stringify({
+          message:'Update The Prism e-Publication page '+page,
+          branch:BRANCH,content:bytes.toString('base64'),
+          ...(previousSha?{sha:previousSha}:{})
+        })
+      });
+      return send(res,200,{uploaded:true,page,path:path.replace(/^site\//,''),note:'GitHub accepted the image. Vercel will deploy the updated publication.'});
+    }
     if(action==='upload'){
       const match=/^data:image\/jpeg;base64,([a-zA-Z0-9+/=]+)$/.exec(body.dataUrl||'');
       if(!match)return send(res,400,{error:'Only compressed JPEG uploads are allowed'});
