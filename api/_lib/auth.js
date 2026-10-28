@@ -93,9 +93,34 @@ export async function authorize(req) {
     return {...current,provider:'github',role:'admin'};
   }catch{return null;}
 }
+const PROJECT_ORIGINS=[SITE,
+  'https://the-prism-publication-rcdex-hub.vercel.app',
+  'https://the-prism-publication-git-main-rcdex-hub.vercel.app'];
+function secureOrigin(value){
+  if(typeof value!=='string')return null;
+  try{
+    const url=new URL(value);
+    return url.protocol==='https:'&&url.origin===value?url.origin:null;
+  }catch{return null;}
+}
 export function sameOrigin(req){
-  const o=req.headers.origin;
-  return o===SITE && (req.headers['sec-fetch-site']==='same-origin'||req.headers['sec-fetch-site']==='none'||!req.headers['sec-fetch-site']);
+  const origin=secureOrigin(req.headers.origin);
+  const host=req.headers.host;
+  const fetchSite=req.headers['sec-fetch-site'];
+  if(!origin||typeof host!=='string'||!/^[a-z0-9.-]+(?::[0-9]{1,5})?$/i.test(host))return false;
+  if(fetchSite&&fetchSite!=='same-origin'&&fetchSite!=='none')return false;
+  // Match the actual request host, rather than trusting forwarded headers or any Vercel domain.
+  try{if(new URL('https://'+host).origin!==origin)return false;}catch{return false;}
+  const trusted=new Set(PROJECT_ORIGINS);
+  // Vercel supplies exact hostnames for this deployment and its branch/production aliases.
+  for(const name of ['VERCEL_URL','VERCEL_BRANCH_URL','VERCEL_PROJECT_PRODUCTION_URL']){
+    const value=process.env[name];
+    if(typeof value==='string'){
+      const configured=secureOrigin('https://'+value);
+      if(configured)trusted.add(configured);
+    }
+  }
+  return trusted.has(origin);
 }
 export function isJson(req){return /^application\/json(?:;|$)/i.test(req.headers['content-type']||'');}
 export function maxAge(){return MAX_AGE;}

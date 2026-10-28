@@ -60,7 +60,7 @@ after(()=>{
 function request(role='admin',method='POST',body={username:'new.staff',email:'staff@example.test',password:'six123',role:'editor'}){
  const id=role==='editor'?editorId:adminId;
  const user=role==='editor'?'schooleditor':'schooladmin';
- return {method,body,headers:{origin:SITE,'sec-fetch-site':'same-origin','content-type':'application/json',
+ return {method,body,headers:{origin:SITE,host:new URL(SITE).host,'sec-fetch-site':'same-origin','content-type':'application/json',
   ...(role?{cookie:SESSION_COOKIE+'='+seal({provider:'supabase',id,user,role,exp:Date.now()+60000})}:{})}};
 }
 async function run(req){
