@@ -9,7 +9,7 @@
  ];
  const mobileQuery=window.matchMedia('(max-width:760px)');
  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
- let step=0,busy=false,container,stage,book,indicator,backButton,nextButton,thumbs,zoom,live;
+ let step=0,busy=false,container,stage,book,indicator,backButton,nextButton,thumbs,zoom,live,downloadButton,pdfStatus;
  const isMobile=()=>mobileQuery.matches;
  const total=()=>isMobile()?PAGES.length:Math.ceil((PAGES.length+2)/2);
  const spread=position=>{
@@ -92,14 +92,36 @@
    '<footer class="ep-toolbar"><div class="ep-navigation"><button type="button" class="ep-arrow" id="ep-previous" aria-label="Previous page">‹</button>'+
    '<span class="ep-indicator" id="ep-indicator">Page 1 of 4</span>'+
    '<button type="button" class="ep-arrow" id="ep-next" aria-label="Next page">›</button></div>'+
-   '<a class="ep-zoom" id="ep-zoom" target="_blank" rel="noopener noreferrer">Open full-size page <span aria-hidden="true">↗</span></a></footer>'+
+   '<div class="ep-footer-actions"><button type="button" class="ep-download" id="ep-download"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5"/><path d="M4 17v3h16v-3"/></svg><span>Download PDF</span></button>'+
+   '<a class="ep-zoom" id="ep-zoom" target="_blank" rel="noopener noreferrer">Open full-size page <span aria-hidden="true">↗</span></a></div></footer>'+
    '<div class="ep-thumbnails" id="ep-thumbnails" aria-label="Jump to page">'+PAGES.map((p,i)=>'<button type="button" data-target="'+(i+1)+'" aria-label="Go to page '+(i+1)+'"><span>'+String(i+1).padStart(2,'0')+'</span><small>'+escapeText(p.name)+'</small></button>').join('')+'</div>'+
    '<p class="ep-reader-tip">Use ← → keys or swipe to turn pages. Select a page number to jump.</p>'+
+   '<p class="ep-pdf-status ep-sr-only" id="ep-pdf-status" role="status" aria-live="polite"></p>'+
    '<span class="ep-sr-only" aria-live="polite" id="ep-live"></span></section>';
   book=el.querySelector('#ep-book');stage=el.querySelector('.ep-stage');indicator=el.querySelector('#ep-indicator');
   backButton=el.querySelector('#ep-previous');nextButton=el.querySelector('#ep-next');thumbs=el.querySelector('#ep-thumbnails');zoom=el.querySelector('#ep-zoom');live=el.querySelector('#ep-live');
+  downloadButton=el.querySelector('#ep-download');pdfStatus=el.querySelector('#ep-pdf-status');
   update();
   backButton.addEventListener('click',()=>go(-1));nextButton.addEventListener('click',()=>go(1));
+  downloadButton.addEventListener('click',async()=>{
+    const label=downloadButton.querySelector('span');
+    downloadButton.disabled=true;
+    label.textContent='Preparing…';
+    pdfStatus.textContent='Preparing The Prism PDF.';
+    try {
+      if(!window.PrismPublicationPdf)throw Error('PDF download is unavailable. Reload the page and try again.');
+      await window.PrismPublicationPdf.download(PAGES,(page,total)=>{
+        label.textContent='Page '+page+'/'+total;
+        pdfStatus.textContent='Preparing PDF page '+page+' of '+total;
+      });
+      pdfStatus.textContent='The four-page PDF download has started.';
+    }catch(error){
+      pdfStatus.textContent=error.message||'The PDF could not be created. Please try again.';
+    }finally{
+      label.textContent='Download PDF';
+      downloadButton.disabled=false;
+    }
+  });
   thumbs.addEventListener('click',e=>{
     const button=e.target.closest('[data-target]');if(!button)return;
     const page=Number(button.dataset.target);

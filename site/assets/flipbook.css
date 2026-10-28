@@ -71,3 +71,17 @@
 }
 @media(max-width:400px){.ep-zoom{font-size:0}.ep-zoom span{font-size:17px}.ep-head{min-height:47px}.ep-head p{max-width:220px}.ep-indicator{min-width:83px}}
 @media(prefers-reduced-motion:reduce){.ep-leaf{transition:none}.ep-arrow{transition:none}}
+
+/* PDF download control for e-Publication — accessible and responsive. */
+.ep-footer-actions{display:flex;justify-content:flex-end;align-items:center;gap:clamp(8px,1.4vw,17px);min-width:0}
+.ep-download{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:#006a48;border:1px solid #005c3d;color:white;border-radius:8px;padding:10px 13px;line-height:1.15;font-weight:800;font-size:11px;white-space:nowrap;box-shadow:0 2px 7px #003f2920;transition:background .18s,transform .18s}
+.ep-download:hover:not(:disabled){background:#00895d;transform:translateY(-1px)}
+.ep-download svg{flex:0 0 auto}
+.ep-download:disabled{opacity:.65;cursor:wait}
+@media(max-width:760px){
+  .ep-footer-actions{gap:7px}
+  .ep-download{padding:9px 9px;gap:5px;font-size:10px}
+  .ep-download svg{width:13px;height:13px}
+}
+@media(max-width:365px){.ep-download{font-size:9px;padding:8px 6px}.ep-footer-actions{gap:4px}}
+@media(prefers-reduced-motion:reduce){.ep-download{transition:none;transform:none!important}}
