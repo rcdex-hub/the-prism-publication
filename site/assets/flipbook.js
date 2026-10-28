@@ -96,7 +96,7 @@
    '<a class="ep-zoom" id="ep-zoom" target="_blank" rel="noopener noreferrer">Open full-size page <span aria-hidden="true">↗</span></a></div></footer>'+
    '<div class="ep-thumbnails" id="ep-thumbnails" aria-label="Jump to page">'+PAGES.map((p,i)=>'<button type="button" data-target="'+(i+1)+'" aria-label="Go to page '+(i+1)+'"><span>'+String(i+1).padStart(2,'0')+'</span><small>'+escapeText(p.name)+'</small></button>').join('')+'</div>'+
    '<p class="ep-reader-tip">Use ← → keys or swipe to turn pages. Select a page number to jump.</p>'+
-   '<p class="ep-pdf-status ep-sr-only" id="ep-pdf-status" role="status" aria-live="polite"></p>'+
+   '<p class="ep-pdf-status" id="ep-pdf-status" role="status" aria-live="polite" hidden></p>'+
    '<span class="ep-sr-only" aria-live="polite" id="ep-live"></span></section>';
   book=el.querySelector('#ep-book');stage=el.querySelector('.ep-stage');indicator=el.querySelector('#ep-indicator');
   backButton=el.querySelector('#ep-previous');nextButton=el.querySelector('#ep-next');thumbs=el.querySelector('#ep-thumbnails');zoom=el.querySelector('#ep-zoom');live=el.querySelector('#ep-live');
@@ -107,6 +107,7 @@
     const label=downloadButton.querySelector('span');
     downloadButton.disabled=true;
     label.textContent='Preparing…';
+    pdfStatus.hidden=true;
     pdfStatus.textContent='Preparing The Prism PDF.';
     try {
       if(!window.PrismPublicationPdf)throw Error('PDF download is unavailable. Reload the page and try again.');
@@ -115,8 +116,11 @@
         pdfStatus.textContent='Preparing PDF page '+page+' of '+total;
       });
       pdfStatus.textContent='The four-page PDF download has started.';
+      pdfStatus.hidden=false;
+      setTimeout(()=>{pdfStatus.hidden=true;},4200);
     }catch(error){
       pdfStatus.textContent=error.message||'The PDF could not be created. Please try again.';
+      pdfStatus.hidden=false;
     }finally{
       label.textContent='Download PDF';
       downloadButton.disabled=false;

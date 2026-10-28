@@ -1,5 +1,5 @@
 /* Offline cache for The Prism. Registration works over HTTPS or localhost. */
-const CACHE='the-prism-v41-20261028-epub-pdf';
+const CACHE='the-prism-v42-20261028-epub-pdf-fresh-images';
 const CORE=['./','./index.html','./assets/styles.css','./assets/app.js','./assets/carousel.js','./assets/flipbook.css','./assets/flipbook.js','./assets/epub-pdf.js','./content/articles.json','./assets/images/prism-logo.webp','./assets/images/prism-wordmark-gold.webp','./assets/images/prism-wordmark-gold-complete.webp','./assets/images/prism-masthead.webp','./assets/images/icon-192.png','./assets/images/icon-512.png','./assets/images/campus-feature-clean.webp','./assets/images/cartoon-choices.webp','./assets/images/infographic-newsroom.webp','./assets/images/gallery-treeplanting.webp','./assets/images/gallery-event.webp','./assets/images/gallery-community.webp','./assets/images/editorial-pen.webp','./assets/images/sports-basketball.webp','./manifest.webmanifest'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));});
@@ -11,6 +11,18 @@ self.addEventListener('fetch',event=>{
  if(path.startsWith('/api/')||path.endsWith('/admin.html')||path.endsWith('/assets/admin.js')||path.endsWith('/assets/admin.css')){
   event.respondWith(fetch(req,{cache:'no-store'}));
   return;
+ }
+ // Publication pages can be replaced by CMS without renaming the files.
+ // Use network-first so both the flipbook and PDF export get the current edition.
+ if(path.includes('/assets/images/epublication/')){
+   event.respondWith(fetch(req,{cache:'no-cache'}).then(response=>{
+     if(response.ok){
+       const copy=response.clone();
+       event.waitUntil(caches.open(CACHE).then(cache=>cache.put(req,copy)));
+     }
+     return response;
+   }).catch(()=>caches.match(req).then(hit=>hit||Response.error())));
+   return;
  }
  // Cache first for public assets, network first for editorial JSON and navigation
  if(req.mode==='navigate'||new URL(req.url).pathname.endsWith('/articles.json')) {

@@ -85,3 +85,12 @@
 }
 @media(max-width:365px){.ep-download{font-size:9px;padding:8px 6px}.ep-footer-actions{gap:4px}}
 @media(prefers-reduced-motion:reduce){.ep-download{transition:none;transform:none!important}}
+
+/* Nonblocking inline confirmation/error for PDF generation */
+.epub{position:relative}
+.ep-pdf-status{position:absolute;z-index:25;left:50%;bottom:69px;transform:translateX(-50%);
+ width:max-content;max-width:calc(100% - 30px);margin:0;padding:8px 13px;border-radius:8px;
+ background:#003c2d;color:white;box-shadow:0 4px 18px #003c2d44;
+ font-size:11px;font-weight:700;text-align:center;pointer-events:none}
+.ep-pdf-status[hidden]{display:none!important}
+@media(max-width:760px){.ep-pdf-status{bottom:calc(105px + env(safe-area-inset-bottom));font-size:10px}}
